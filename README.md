@@ -1,18 +1,18 @@
-# 🧭 Career Compass: Intelligent Career Guidance Tool
+# ✨ Career Spark: Ignite Your Professional Future
 
 [![GitHub stars](https://img.shields.io/github/stars/YOUR_USERNAME/YOUR_REPO?style=social)](https://github.com/YOUR_USERNAME/YOUR_REPO/stargazers)
 [![GitHub forks](https://img.shields.io/github/forks/YOUR_USERNAME/YOUR_REPO?style=social)](https://github.com/YOUR_USERNAME/YOUR_REPO/network/members)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-An intelligent, responsive, and fully self-contained career guidance tool built in a single HTML file. Career Compass uses a sophisticated multi-dimensional assessment to help users discover their ideal career path based on their personality, interests, and values.
+An intelligent, responsive, and fully self-contained career guidance tool built in a single HTML file. **Career Spark** uses a sophisticated multi-dimensional assessment to help users discover their ideal career path and ignite their professional passion.
 
-### ✨ [Live Demo Link]([YOUR_NETLIFY/VERCEL_LINK]) ✨
+### 🚀 [Live Demo Link]([YOUR_LIVE_DEMO_LINK]) 🚀
 
-![Career Compass Demo GIF](career-compass-demo.gif)
+![Career Spark Demo GIF](career-spark-demo.gif)
 
 ---
 
-## 🚀 Key Features
+## 🔥 Key Features
 
 *   **Comprehensive Assessment:** A 40-question quiz covering personality traits (RIASEC), values, work-life preferences, and problem-solving styles.
 *   **Intelligent Matching Algorithm:** A weighted, multi-dimensional profiling system that provides accurate and personalized career recommendations.
@@ -34,7 +34,7 @@ An intelligent, responsive, and fully self-contained career guidance tool built 
 
 ## 🎯 What problem does this solve?
 
-Many individuals struggle to identify a career that truly aligns with their passions and personality. Traditional career tests can be generic and uninspiring. Career Compass provides a **free, accessible, and highly personalized alternative**. By analyzing a user's responses through a multi-faceted lens, it delivers actionable insights and helps bridge the gap between self-discovery and professional planning.
+Many individuals struggle to find a career that truly aligns with their passions and personality. Traditional career tests can be generic and uninspiring. **Career Spark** provides a **free, accessible, and highly personalized alternative**. By analyzing a user's responses through a multi-faceted lens, it delivers actionable insights and helps bridge the gap between self-discovery and professional planning.
 
 ---
 
@@ -59,7 +59,7 @@ Since this is a single-file application, getting started is incredibly simple.
 
 ## 🧠 The Matching Algorithm
 
-The power of Career Compass lies in its matching logic. It goes beyond simple keyword matching and uses a weighted system to create a holistic user profile.
+The power of **Career Spark** lies in its matching logic. It goes beyond simple keyword matching and uses a weighted system to create a holistic user profile.
 
 1.  **User Profiling:** The user's answers are mapped to the **RIASEC (Holland Codes) model**—Realistic, Investigative, Artistic, Social, Enterprising, Conventional.
 2.  **Multi-Dimensional Analysis:** The algorithm also considers preferences for work environment (structured vs. dynamic), motivational drivers (autonomy, social impact), and core values.
@@ -72,7 +72,7 @@ The power of Career Compass lies in its matching logic. It goes beyond simple ke
 
 This project is optimized for search engines to help users find a high-quality career assessment tool. Keywords include:
 
-*Career Guidance Tool, Career Path Quiz, Free Career Assessment, HTML Personality Test, JavaScript Career Quiz, RIASEC Test, Holland Codes Assessment, Best Career For Me, Professional Guidance, Self-Discovery Tool, Job Recommendation Engine, Single File HTML App, Responsive Web Tool.*
+*Career Spark, Career Spark Quiz, Ignite Your Career, Find Your Spark, Career Guidance Tool, Career Path Quiz, Free Career Assessment, HTML Personality Test, JavaScript Career Quiz, RIASEC Test, Holland Codes Assessment, Best Career For Me, Professional Guidance, Self-Discovery Tool, Job Recommendation Engine, Single File HTML App, Responsive Web Tool.*
 
 ---
 
@@ -86,16 +86,16 @@ Contributions, issues, and feature requests are welcome! Feel free to check the 
 4.  **Push to the Branch** (`git push origin feature/AmazingFeature`)
 5.  **Open a Pull Request**
 
-We believe in the power of community and welcome any ideas to make Career Compass even better!
+We believe in the power of community and welcome any ideas to make **Career Spark** even better!
 
 ---
 
 ## 📄 License
 
-Distributed under the MIT License. See `LICENSE` for more information.
+Distributed under the MIT License. See the `LICENSE` file for more information.
 
 ---
 
 <p align="center">
   Made with ❤️ by [Your Name/Handle]
-</p>
+</p>````
