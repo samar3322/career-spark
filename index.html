@@ -1,0 +1,3518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Career Spark - Intelligent Career Guidance</title>
+    <style>
+        :root {
+            --primary: #d32f2f;
+            --primary-dark: #b71c1c;
+            --primary-light: #ff6659;
+            --off-white: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+            --light-gray: #e9ecef;
+            --border-radius: 12px;
+            --shadow: 0 8px 25px rgba(211, 47, 47, 0.15);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --max-width: 800px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #fff5f5 0%, #ffebee 50%, #f8f9fa 100%);
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: var(--max-width);
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            border: 1px solid var(--light-gray);
+        }
+
+        header {
+            background: var(--primary);
+            color: white;
+            padding: 32px;
+            text-align: center;
+            position: relative;
+        }
+
+        header::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            right: 0;
+            height: 10px;
+            background: linear-gradient(to right, transparent, var(--primary-light), transparent);
+            border-radius: 50%;
+        }
+
+        header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 8px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        header p {
+            opacity: 0.9;
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .progress-container {
+            padding: 20px 32px;
+            background: var(--off-white);
+            border-bottom: 1px solid var(--light-gray);
+            position: relative;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 8px;
+            background: var(--light-gray);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 12px;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--primary);
+            width: 0%;
+            transition: var(--transition);
+            border-radius: 4px;
+            position: relative;
+            overflow: visible;
+        }
+
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, 
+                rgba(255,255,255,0.3) 0%, 
+                rgba(255,255,255,0.1) 50%, 
+                rgba(255,255,255,0.3) 100%);
+            border-radius: 4px;
+        }
+
+        .progress-text {
+            font-size: 0.95rem;
+            color: var(--gray);
+            text-align: right;
+            font-weight: 500;
+        }
+
+        .content {
+            padding: 40px;
+            min-height: 500px;
+            position: relative;
+        }
+
+        .question-container {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .question-container.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .question-container h2 {
+            font-size: 1.5rem;
+            margin-bottom: 32px;
+            color: var(--dark);
+            font-weight: 600;
+            line-height: 1.4;
+            position: relative;
+            padding-left: 12px;
+        }
+
+        .question-container h2::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 2px;
+            width: 6px;
+            height: 24px;
+            background: var(--primary);
+            border-radius: 3px;
+        }
+
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .option {
+            padding: 16px 20px;
+            border: 2px solid var(--light-gray);
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            background: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .option:hover {
+            border-color: var(--primary-light);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(211, 47, 47, 0.1);
+        }
+
+        .option.selected {
+            border-color: var(--primary);
+            background-color: rgba(211, 47, 47, 0.05);
+            box-shadow: 0 8px 25px rgba(211, 47, 47, 0.15);
+        }
+
+        .option.selected::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(211, 47, 47, 0.05);
+            pointer-events: none;
+        }
+
+        .option-check {
+            width: 24px;
+            height: 24px;
+            border: 2px solid var(--light-gray);
+            border-radius: 50%;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+            background: white;
+        }
+
+        .option.selected .option-check {
+            border-color: var(--primary);
+            background: var(--primary);
+        }
+
+        .option.selected .option-check::after {
+            content: '';
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: white;
+        }
+
+        .option-label {
+            flex: 1;
+            cursor: pointer;
+            font-size: 1.05rem;
+            color: var(--dark);
+            font-weight: 500;
+        }
+
+        .likert-scale {
+            display: flex;
+            justify-content: space-between;
+            margin: 24px 0;
+            gap: 8px;
+        }
+
+        .likert-option {
+            flex: 1;
+            text-align: center;
+            padding: 14px;
+            border: 2px solid var(--light-gray);
+            border-radius: var(--border-radius);
+            margin: 0;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.9rem;
+            background: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .likert-option:hover, .likert-option.selected {
+            border-color: var(--primary);
+            background-color: rgba(211, 47, 47, 0.05);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(211, 47, 47, 0.1);
+        }
+
+        .likert-option.selected::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(211, 47, 47, 0.05);
+            pointer-events: none;
+        }
+
+        .likert-label {
+            display: block;
+            margin-top: 6px;
+            font-size: 0.75rem;
+            color: var(--gray);
+            font-weight: 500;
+            line-height: 1.3;
+        }
+
+        .ranking-container {
+            margin: 24px 0;
+        }
+
+        .ranking-item {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            border: 2px solid var(--light-gray);
+            border-radius: var(--border-radius);
+            margin-bottom: 12px;
+            cursor: move;
+            background: white;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .ranking-item:hover {
+            border-color: var(--primary-light);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(211, 47, 47, 0.1);
+        }
+
+        .ranking-item.dragging {
+            opacity: 0.7;
+            border-color: var(--primary);
+        }
+
+        .ranking-handle {
+            margin-right: 16px;
+            color: var(--gray);
+            cursor: move;
+            flex-shrink: 0;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .ranking-handle::before {
+            content: '⋮';
+            font-size: 1.5rem;
+            color: var(--gray);
+        }
+
+        .ranking-rank {
+            width: 32px;
+            height: 32px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 16px;
+            flex-shrink: 0;
+            font-size: 0.9rem;
+        }
+
+        .text-input {
+            width: 100%;
+            padding: 16px 20px;
+            border: 2px solid var(--light-gray);
+            border-radius: var(--border-radius);
+            font-size: 1.05rem;
+            margin-bottom: 24px;
+            transition: var(--transition);
+            resize: vertical;
+            min-height: 100px;
+            font-family: inherit;
+        }
+
+        .text-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(211, 47, 47, 0.2);
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            gap: 16px;
+        }
+
+        .btn {
+            padding: 16px 32px;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 1.05rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 140px;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(211, 47, 47, 0.1);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-prev {
+            background: white;
+            color: var(--dark);
+            border: 2px solid var(--light-gray);
+        }
+
+        .btn-prev:hover:not(:disabled) {
+            background: var(--off-white);
+            border-color: var(--gray);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-next, .btn-submit {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-next:hover:not(:disabled), .btn-submit:hover:not(:disabled) {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(211, 47, 47, 0.2);
+        }
+
+        .btn-submit {
+            background: linear-gradient(to right, var(--primary), var(--primary-dark));
+        }
+
+        .results-container {
+            padding: 40px;
+        }
+
+        .results-container h2 {
+            font-size: 2rem;
+            margin-bottom: 16px;
+            color: var(--dark);
+            text-align: center;
+            font-weight: 700;
+        }
+
+        .results-container p {
+            text-align: center;
+            color: var(--gray);
+            margin-bottom: 40px;
+            font-size: 1.1rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .career-card {
+            background: white;
+            border: 2px solid var(--light-gray);
+            border-radius: var(--border-radius);
+            padding: 32px;
+            margin-bottom: 28px;
+            box-shadow: 0 8px 25px rgba(211, 47, 47, 0.08);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .career-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--primary);
+        }
+
+        .career-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 16px 40px rgba(211, 47, 47, 0.15);
+            border-color: var(--primary-light);
+        }
+
+        .career-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .career-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+            line-height: 1.3;
+        }
+
+        .alignment-score {
+            background: rgba(211, 47, 47, 0.1);
+            color: var(--primary-dark);
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            border: 1px solid rgba(211, 47, 47, 0.2);
+            min-width: 80px;
+            text-align: center;
+        }
+
+        .career-description {
+            margin-bottom: 24px;
+            color: var(--dark);
+            font-size: 1.1rem;
+            line-height: 1.7;
+        }
+
+        .reasons-list {
+            margin: 20px 0;
+            padding-left: 24px;
+        }
+
+        .reasons-list li {
+            margin-bottom: 12px;
+            color: var(--dark);
+            font-size: 1.05rem;
+            position: relative;
+        }
+
+        .reasons-list li::before {
+            content: '•';
+            color: var(--primary);
+            font-weight: bold;
+            display: inline-block;
+            width: 1em;
+            margin-left: -1em;
+        }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin: 24px 0;
+        }
+
+        .detail-item {
+            padding: 16px;
+            background: var(--off-white);
+            border-radius: var(--border-radius);
+            border: 1px solid var(--light-gray);
+            transition: var(--transition);
+        }
+
+        .detail-item:hover {
+            background: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(211, 47, 47, 0.1);
+        }
+
+        .detail-label {
+            font-size: 0.85rem;
+            color: var(--gray);
+            margin-bottom: 6px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .detail-value {
+            font-weight: 600;
+            color: var(--dark);
+            font-size: 1.05rem;
+            line-height: 1.5;
+        }
+
+        .next-steps {
+            margin-top: 24px;
+            padding: 24px;
+            background: linear-gradient(to right, rgba(211, 47, 47, 0.05), rgba(211, 47, 47, 0.02));
+            border-radius: var(--border-radius);
+            border-left: 4px solid var(--primary);
+        }
+
+        .next-steps h4 {
+            color: var(--primary-dark);
+            margin-bottom: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .next-steps ul {
+            padding-left: 24px;
+        }
+
+        .next-steps li {
+            margin-bottom: 8px;
+            color: var(--dark);
+            font-size: 1.05rem;
+        }
+
+        .next-steps li::before {
+            content: '→';
+            color: var(--primary);
+            font-weight: bold;
+            display: inline-block;
+            width: 1.2em;
+            margin-left: -1.2em;
+        }
+
+        .restart-btn {
+            display: block;
+            width: 240px;
+            margin: 50px auto 0;
+            text-align: center;
+            padding: 16px 32px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 8px 25px rgba(211, 47, 47, 0.2);
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .restart-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(211, 47, 47, 0.3);
+        }
+
+        .restart-btn svg {
+            margin-right: 8px;
+        }
+
+        /* Loading state */
+        .loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 400px;
+            text-align: center;
+            padding: 40px;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(211, 47, 47, 0.2);
+            border-top: 4px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 24px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading h2 {
+            color: var(--primary);
+            margin-bottom: 12px;
+            font-size: 1.5rem;
+        }
+
+        .loading p {
+            color: var(--gray);
+            max-width: 500px;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            :root {
+                --max-width: 95%;
+            }
+            
+            body {
+                padding: 15px;
+            }
+            
+            .container {
+                border-radius: 16px;
+            }
+            
+            header {
+                padding: 28px 20px;
+            }
+            
+            header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .progress-container {
+                padding: 16px 20px;
+            }
+            
+            .content {
+                padding: 30px 20px;
+            }
+            
+            .buttons {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .career-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .alignment-score {
+                align-self: flex-start;
+            }
+            
+            .details-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header h1 {
+                font-size: 1.6rem;
+            }
+            
+            header p {
+                font-size: 1rem;
+            }
+            
+            .content {
+                padding: 25px 15px;
+            }
+            
+            .question-container h2 {
+                font-size: 1.3rem;
+            }
+            
+            .btn {
+                padding: 14px 20px;
+                font-size: 1rem;
+            }
+            
+            .career-card {
+                padding: 25px 20px;
+            }
+            
+            .career-title {
+                font-size: 1.4rem;
+            }
+            
+            .results-container h2 {
+                font-size: 1.8rem;
+            }
+        }
+
+        /* Animation for page transitions */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        /* Focus styles for accessibility */
+        .option:focus, .likert-option:focus, .btn:focus {
+            outline: 3px solid var(--primary-light);
+            outline-offset: 2px;
+        }
+
+        /* Reduce motion for users who prefer it */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                transition: none !important;
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Career Spark</h1>
+            <p>Discover your ideal career path with our intelligent guidance tool</p>
+        </header>
+        
+        <div class="progress-container">
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+            <div class="progress-text" id="progressText">Question 1 of 40</div>
+        </div>
+        
+        <div class="content" id="content">
+            <!-- Content will be populated by JavaScript -->
+        </div>
+    </div>
+
+    <script>
+        // Comprehensive career database with detailed information
+        const careerDatabase = [
+            {
+                id: 1,
+                title: "Software Developer",
+                description: "Design, develop, and maintain software applications and systems using various programming languages and frameworks.",
+                riasec: { Realistic: 3, Investigative: 8, Artistic: 5, Social: 4, Enterprising: 3, Conventional: 6 },
+                bigFive: { openness: 8, conscientiousness: 7, extraversion: 4, agreeableness: 5, neuroticism: 3 },
+                workEnvironment: "structured",
+                motivationalDrivers: ["achievement", "autonomy", "problem-solving"],
+                alignmentFactors: [
+                    "Strong analytical and problem-solving skills",
+                    "Enjoyment of logical thinking and structured challenges",
+                    "Preference for independent work with occasional collaboration"
+                ],
+                workEnvironmentDesc: "Primarily indoor, office or remote setting with flexible schedules. Often involves collaboration with teams but significant independent work.",
+                education: "Bachelor's degree in Computer Science or related field; coding bootcamps also common",
+                skills: ["Programming languages", "Problem-solving", "Attention to detail", "Version control", "Debugging"],
+                growthOutlook: "Much faster than average - 22% growth projected over the next decade",
+                nextSteps: [
+                    "Take online courses in Python, JavaScript, or Java",
+                    "Build a portfolio of personal projects on GitHub",
+                    "Participate in coding challenges on platforms like LeetCode"
+                ]
+            },
+            {
+                id: 2,
+                title: "Clinical Psychologist",
+                description: "Assess, diagnose, and treat mental, emotional, and behavioral disorders through therapy and counseling.",
+                riasec: { Realistic: 2, Investigative: 7, Artistic: 6, Social: 9, Enterprising: 4, Conventional: 5 },
+                bigFive: { openness: 8, conscientiousness: 8, extraversion: 6, agreeableness: 9, neuroticism: 2 },
+                workEnvironment: "collaborative",
+                motivationalDrivers: ["social impact", "helping others", "understanding human behavior"],
+                alignmentFactors: [
+                    "High empathy and emotional intelligence",
+                    "Strong listening and communication skills",
+                    "Interest in human behavior and mental processes"
+                ],
+                workEnvironmentDesc: "Private practice, hospitals, clinics, or academic settings. Typically one-on-one or small group sessions with structured appointments.",
+                education: "Doctoral degree (Ph.D. or Psy.D.) and state licensure",
+                skills: ["Active listening", "Empathy", "Diagnosis", "Therapeutic techniques", "Ethical practice"],
+                growthOutlook: "Faster than average - 14% growth projected over the next decade",
+                nextSteps: [
+                    "Pursue a bachelor's degree in psychology or related field",
+                    "Gain experience through volunteering at mental health organizations",
+                    "Consider graduate programs accredited by the American Psychological Association"
+                ]
+            },
+            {
+                id: 3,
+                title: "UX Designer",
+                description: "Create user-centered designs for digital products by researching user needs and designing intuitive interfaces.",
+                riasec: { Realistic: 4, Investigative: 6, Artistic: 8, Social: 7, Enterprising: 5, Conventional: 4 },
+                bigFive: { openness: 9, conscientiousness: 7, extraversion: 6, agreeableness: 7, neuroticism: 3 },
+                workEnvironment: "dynamic",
+                motivationalDrivers: ["creativity", "user impact", "innovation"],
+                alignmentFactors: [
+                    "Strong creative and artistic abilities",
+                    "Empathy for user experiences and needs",
+                    "Interest in technology and human-computer interaction"
+                ],
+                workEnvironmentDesc: "Creative agencies, tech companies, or freelance. Collaborative teams with frequent feedback sessions and user testing.",
+                education: "Bachelor's degree in design, human-computer interaction, or related field; specialized bootcamps also common",
+                skills: ["User research", "Wireframing", "Prototyping", "Usability testing", "Design tools (Figma, Sketch)"],
+                growthOutlook: "Much faster than average - 23% growth projected over the next decade",
+                nextSteps: [
+                    "Learn design tools like Figma or Adobe XD",
+                    "Study principles of user experience and human-centered design",
+                    "Create a portfolio showcasing design thinking process"
+                ]
+            },
+            {
+                id: 4,
+                title: "Environmental Scientist",
+                description: "Research and address environmental problems by collecting and analyzing data about the natural world and human impact.",
+                riasec: { Realistic: 7, Investigative: 9, Artistic: 4, Social: 5, Enterprising: 3, Conventional: 6 },
+                bigFive: { openness: 8, conscientiousness: 8, extraversion: 5, agreeableness: 6, neuroticism: 3 },
+                workEnvironment: "mixed",
+                motivationalDrivers: ["social impact", "scientific discovery", "environmental stewardship"],
+                alignmentFactors: [
+                    "Strong analytical and research skills",
+                    "Passion for environmental conservation",
+                    "Willingness to work both in laboratories and field settings"
+                ],
+                workEnvironmentDesc: "Combination of laboratory work, field research, and office work. May involve travel to various ecosystems and collaboration with other scientists.",
+                education: "Bachelor's degree in environmental science or related field; master's often preferred",
+                skills: ["Data analysis", "Field research", "Scientific writing", "GIS mapping", "Environmental regulations"],
+                growthOutlook: "Faster than average - 8% growth projected over the next decade",
+                nextSteps: [
+                    "Take courses in environmental science, biology, and chemistry",
+                    "Gain field experience through internships with environmental organizations",
+                    "Learn geographic information systems (GIS) software"
+                ]
+            },
+            {
+                id: 5,
+                title: "Entrepreneur",
+                description: "Identify business opportunities and create, organize, and manage new ventures to bring innovative ideas to market.",
+                riasec: { Realistic: 5, Investigative: 6, Artistic: 7, Social: 6, Enterprising: 9, Conventional: 4 },
+                bigFive: { openness: 8, conscientiousness: 7, extraversion: 8, agreeableness: 5, neuroticism: 4 },
+                workEnvironment: "dynamic",
+                motivationalDrivers: ["autonomy", "achievement", "innovation", "financial potential"],
+                alignmentFactors: [
+                    "High initiative and self-motivation",
+                    "Comfort with risk and uncertainty",
+                    "Strong leadership and decision-making abilities"
+                ],
+                workEnvironmentDesc: "Varies widely by industry. Often involves long hours, high pressure, and wearing multiple hats. Can be highly rewarding but also stressful.",
+                education: "Varies by industry; business education helpful but not required",
+                skills: ["Leadership", "Financial management", "Marketing", "Networking", "Resilience"],
+                growthOutlook: "Varies by industry; overall self-employment growing at 3% annually",
+                nextSteps: [
+                    "Identify a market need or problem to solve",
+                    "Develop a business plan and validate your idea",
+                    "Seek mentorship from experienced entrepreneurs"
+                ]
+            },
+            {
+                id: 6,
+                title: "Nurse",
+                description: "Provide patient care, educate individuals about health conditions, and provide advice and emotional support to patients and their families.",
+                riasec: { Realistic: 8, Investigative: 6, Artistic: 4, Social: 9, Enterprising: 4, Conventional: 7 },
+                bigFive: { openness: 6, conscientiousness: 9, extraversion: 7, agreeableness: 9, neuroticism: 3 },
+                workEnvironment: "structured",
+                motivationalDrivers: ["helping others", "social impact", "practical application"],
+                alignmentFactors: [
+                    "Strong empathy and compassion",
+                    "Ability to work under pressure in fast-paced environments",
+                    "Attention to detail and adherence to protocols"
+                ],
+                workEnvironmentDesc: "Hospitals, clinics, nursing homes, or home healthcare. Shift work including nights, weekends, and holidays. High patient interaction.",
+                education: "Associate or Bachelor of Science in Nursing (ASN/BSN) and state licensure (NCLEX-RN)",
+                skills: ["Patient care", "Medical procedures", "Communication", "Critical thinking", "Emotional resilience"],
+                growthOutlook: "Much faster than average - 9% growth projected over the next decade",
+                nextSteps: [
+                    "Enroll in an accredited nursing program",
+                    "Gain experience through certified nursing assistant (CNA) work",
+                    "Prepare for and pass the NCLEX-RN licensing exam"
+                ]
+            },
+            {
+                id: 7,
+                title: "Data Analyst",
+                description: "Interpret complex data sets to identify patterns, trends, and insights that help organizations make informed decisions.",
+                riasec: { Realistic: 5, Investigative: 8, Artistic: 4, Social: 5, Enterprising: 4, Conventional: 8 },
+                bigFive: { openness: 7, conscientiousness: 8, extraversion: 5, agreeableness: 6, neuroticism: 3 },
+                workEnvironment: "structured",
+                motivationalDrivers: ["problem-solving", "analytical challenges", "data-driven insights"],
+                alignmentFactors: [
+                    "Strong quantitative and analytical skills",
+                    "Attention to detail and accuracy",
+                    "Ability to translate complex information into understandable insights"
+                ],
+                workEnvironmentDesc: "Office or remote settings in various industries. Primarily computer-based work with regular meetings to present findings to stakeholders.",
+                education: "Bachelor's degree in mathematics, statistics, computer science, or related field",
+                skills: ["Statistical analysis", "Data visualization", "SQL", "Excel", "Critical thinking"],
+                growthOutlook: "Much faster than average - 25% growth projected over the next decade",
+                nextSteps: [
+                    "Learn SQL and data visualization tools like Tableau",
+                    "Take courses in statistics and data analysis",
+                    "Practice with public datasets to build a portfolio"
+                ]
+            },
+            {
+                id: 8,
+                title: "Graphic Designer",
+                description: "Create visual concepts using computer software or by hand to communicate ideas that inspire, inform, and captivate consumers.",
+                riasec: { Realistic: 3, Investigative: 4, Artistic: 9, Social: 6, Enterprising: 5, Conventional: 5 },
+                bigFive: { openness: 9, conscientiousness: 7, extraversion: 6, agreeableness: 6, neuroticism: 4 },
+                workEnvironment: "creative",
+                motivationalDrivers: ["creativity", "aesthetic expression", "visual communication"],
+                alignmentFactors: [
+                    "Strong artistic and creative abilities",
+                    "Eye for design, color, and composition",
+                    "Ability to translate abstract concepts into visual form"
+                ],
+                workEnvironmentDesc: "Design agencies, in-house creative teams, or freelance. Collaborative with clients and team members, with deadlines and revisions.",
+                education: "Bachelor's degree in graphic design or related field",
+                skills: ["Design software (Adobe Creative Suite)", "Typography", "Branding", "Layout", "Client communication"],
+                growthOutlook: "Average - 3% growth projected over the next decade, but digital design growing faster",
+                nextSteps: [
+                    "Master design software like Adobe Photoshop, Illustrator, and InDesign",
+                    "Build a strong portfolio showcasing diverse projects",
+                    "Stay current with design trends and emerging technologies"
+                ]
+            },
+            {
+                id: 9,
+                title: "Mechanical Engineer",
+                description: "Design, develop, build, and test mechanical and thermal sensors and devices, including tools, engines, and machines.",
+                riasec: { Realistic: 9, Investigative: 8, Artistic: 4, Social: 4, Enterprising: 5, Conventional: 7 },
+                bigFive: { openness: 7, conscientiousness: 8, extraversion: 5, agreeableness: 6, neuroticism: 3 },
+                workEnvironment: "structured",
+                motivationalDrivers: ["problem-solving", "technical challenges", "practical application"],
+                alignmentFactors: [
+                    "Strong analytical and mathematical skills",
+                    "Interest in how things work and mechanical systems",
+                    "Attention to detail in design and implementation"
+                ],
+                workEnvironmentDesc: "Offices, laboratories, and industrial settings. Often work in teams on complex projects with regular meetings and documentation requirements.",
+                education: "Bachelor's degree in mechanical engineering; Professional Engineer (PE) license beneficial",
+                skills: ["CAD software", "Mathematics", "Physics", "Problem-solving", "Technical writing"],
+                growthOutlook: "Average - 7% growth projected over the next decade",
+                nextSteps: [
+                    "Pursue a degree in mechanical engineering from an ABET-accredited program",
+                    "Gain experience through internships in manufacturing or design firms",
+                    "Consider obtaining a Professional Engineer license"
+                ]
+            },
+            {
+                id: 10,
+                title: "Teacher (Secondary Education)",
+                description: "Plan, organize, and implement instructional programs to teach academic subjects to students at the middle or high school level.",
+                riasec: { Realistic: 4, Investigative: 6, Artistic: 5, Social: 8, Enterprising: 4, Conventional: 7 },
+                bigFive: { openness: 7, conscientiousness: 8, extraversion: 7, agreeableness: 8, neuroticism: 4 },
+                workEnvironment: "structured",
+                motivationalDrivers: ["social impact", "mentoring", "knowledge sharing"],
+                alignmentFactors: [
+                    "Passion for a specific subject area",
+                    "Strong communication and presentation skills",
+                    "Patience and ability to work with diverse learners"
+                ],
+                workEnvironmentDesc: "Classroom settings with structured schedules. Involves lesson planning, grading, parent communication, and extracurricular activities.",
+                education: "Bachelor's degree in education or subject area with teacher certification",
+                skills: ["Classroom management", "Curriculum development", "Differentiated instruction", "Assessment", "Patience"],
+                growthOutlook: "Average - 5% growth projected over the next decade",
+                nextSteps: [
+                    "Obtain a teaching degree and certification in your subject area",
+                    "Gain experience through student teaching placements",
+                    "Consider specialized certifications in high-demand areas"
+                ]
+            },
+            {
+                id: 11,
+                title: "Financial Analyst",
+                description: "Provide guidance to businesses and individuals making investment decisions by assessing the performance of stocks, bonds, and other types of investments.",
+                riasec: { Realistic: 5, Investigative: 7, Artistic: 3, Social: 5, Enterprising: 8, Conventional: 9 },
+                bigFive: { openness: 6, conscientiousness: 9, extraversion: 6, agreeableness: 5, neuroticism: 4 },
+                workEnvironment: "structured",
+                motivationalDrivers: ["financial acumen", "analytical challenges", "career advancement"],
+                alignmentFactors: [
+                    "Strong quantitative and analytical skills",
+                    "Interest in financial markets and economic trends",
+                    "Attention to detail and accuracy in financial modeling"
+                ],
+                workEnvironmentDesc: "Office environments in banks, investment firms, or corporate finance departments. Fast-paced with tight deadlines and high stakes.",
+                education: "Bachelor's degree in finance, economics, or related field; CFA designation highly valued",
+                skills: ["Financial modeling", "Data analysis", "Excel", "Market research", "Communication"],
+                growthOutlook: "Faster than average - 11% growth projected over the next decade",
+                nextSteps: [
+                    "Pursue a degree in finance, economics, or accounting",
+                    "Gain experience through internships in financial institutions",
+                    "Consider pursuing the Chartered Financial Analyst (CFA) designation"
+                ]
+            },
+            {
+                id: 12,
+                title: "Architect",
+                description: "Design buildings and the spaces within them, considering aesthetics, functionality, safety, and sustainability requirements.",
+                riasec: { Realistic: 7, Investigative: 6, Artistic: 8, Social: 5, Enterprising: 5, Conventional: 6 },
+                bigFive: { openness: 8, conscientiousness: 8, extraversion: 6, agreeableness: 6, neuroticism: 4 },
+                workEnvironment: "creative",
+                motivationalDrivers: ["creative expression", "problem-solving", "tangible impact"],
+                alignmentFactors: [
+                    "Strong spatial reasoning and visualization skills",
+                    "Combination of artistic creativity and technical knowledge",
+                    "Interest in design, construction, and urban planning"
+                ],
+                workEnvironmentDesc: "Architecture firms, government agencies, or self-employed. Combination of office work (design, meetings) and site visits to construction projects.",
+                education: "Professional degree in architecture (B.Arch or M.Arch) and licensure",
+                skills: ["Design software (AutoCAD, Revit)", "Building codes", "Project management", "Sustainability principles", "Client communication"],
+                growthOutlook: "Average - 3% growth projected over the next decade",
+                nextSteps: [
+                    "Pursue a professional degree in architecture from a NAAB-accredited program",
+                    "Complete the Architectural Experience Program (AXP)",
+                    "Prepare for and pass the Architect Registration Examination (ARE)"
+                ]
+            },
+            {
+                id: 13,
+                title: "Physician",
+                description: "Examine patients, take medical histories, prescribe medications, and order, perform, and interpret diagnostic tests.",
+                riasec: { Realistic: 8, Investigative: 9, Artistic: 4, Social: 8, Enterprising: 6, Conventional: 7 },
+                bigFive: { openness: 7, conscientiousness: 9, extraversion: 6, agreeableness: 7, neuroticism: 3 },
+                workEnvironment: "structured",
+                motivationalDrivers: ["helping others", "intellectual challenge", "professional respect"],
+                alignmentFactors: [
+                    "Strong scientific and analytical abilities",
+                    "Compassion and empathy for patients",
+                    "Ability to handle high-pressure situations and make critical decisions"
+                ],
+                workEnvironmentDesc: "Hospitals, clinics, or private practices. Long hours, on-call responsibilities, and high emotional demands. Requires continuous learning.",
+                education: "Bachelor's degree, medical degree (MD or DO), residency training, and medical licensure",
+                skills: ["Medical knowledge", "Diagnostic skills", "Communication", "Emotional resilience", "Attention to detail"],
+                growthOutlook: "Faster than average - 3% growth projected over the next decade",
+                nextSteps: [
+                    "Complete pre-medical coursework in college",
+                    "Take the Medical College Admission Test (MCAT)",
+                    "Apply to medical schools and complete residency training in your specialty"
+                ]
+            },
+            {
+                id: 14,
+                title: "Marketing Manager",
+                description: "Plan, direct, or coordinate marketing policies and programs to promote products or services and maximize profits.",
+                riasec: { Realistic: 4, Investigative: 5, Artistic: 6, Social: 8, Enterprising: 9, Conventional: 6 },
+                bigFive: { openness: 7, conscientiousness: 8, extraversion: 8, agreeableness: 6, neuroticism: 4 },
+                workEnvironment: "dynamic",
+                motivationalDrivers: ["creativity", "business impact", "leadership"],
+                alignmentFactors: [
+                    "Strong communication and persuasion skills",
+                    "Understanding of consumer behavior and market trends",
+                    "Strategic thinking and business acumen"
+                ],
+                workEnvironmentDesc: "Corporate offices, advertising agencies, or consulting firms. Fast-paced with deadlines, team collaboration, and client presentations.",
+                education: "Bachelor's degree in marketing, business, or related field; MBA often beneficial",
+                skills: ["Market research", "Digital marketing", "Brand management", "Budgeting", "Leadership"],
+                growthOutlook: "Faster than average - 10% growth projected over the next decade",
+                nextSteps: [
+                    "Gain experience in entry-level marketing roles",
+                    "Develop expertise in digital marketing channels",
+                    "Consider pursuing an MBA for advancement opportunities"
+                ]
+            },
+            {
+                id: 15,
+                title: "Biologist",
+                description: "Study living organisms and their relationship to the environment, conducting research on topics like genetics, marine life, or wildlife conservation.",
+                riasec: { Realistic: 6, Investigative: 9, Artistic: 5, Social: 5, Enterprising: 4, Conventional: 7 },
+                bigFive: { openness: 8, conscientiousness: 8, extraversion: 5, agreeableness: 6, neuroticism: 3 },
+                workEnvironment: "mixed",
+                motivationalDrivers: ["scientific discovery", "environmental stewardship", "research"],
+                alignmentFactors: [
+                    "Strong curiosity about living systems and natural processes",
+                    "Patience and attention to detail in research",
+                    "Ability to work both independently and as part of research teams"
+                ],
+                workEnvironmentDesc: "Laboratories, field sites, or academic institutions. Combination of hands-on experimentation, data analysis, and scientific writing.",
+                education: "Bachelor's degree for entry-level; Ph.D. typically required for research positions",
+                skills: ["Scientific method", "Data collection", "Laboratory techniques", "Statistical analysis", "Scientific writing"],
+                growthOutlook: "Faster than average - 5% growth projected over the next decade",
+                nextSteps: [
+                    "Pursue a degree in biology or specialized field (marine biology, microbiology, etc.)",
+                    "Gain research experience through laboratory assistant positions",
+                    "Consider graduate studies for advanced research roles"
+                ]
+            },
+            {
+                id: 16,
+                title: "Electrician",
+                description: "Install, maintain, and repair electrical power, communications, lighting, and control systems in homes, businesses, and factories.",
+                riasec: { Realistic: 9, Investigative: 6, Artistic: 3, Social: 5, Enterprising: 5, Conventional: 6 },
+                bigFive: { openness: 5, conscientiousness: 8, extraversion: 6, agreeableness: 6, neuroticism: 4 },
+                workEnvironment: "hands-on",
+                motivationalDrivers: ["practical application", "problem-solving", "independence"],
+                alignmentFactors: [
+                    "Strong spatial reasoning and manual dexterity",
+                    "Ability to read technical diagrams and blueprints",
+                    "Comfort working with tools and electrical systems"
+                ],
+                workEnvironmentDesc: "Construction sites, homes, and commercial buildings. Physical work at heights, in tight spaces, and with potentially hazardous materials.",
+                education: "High school diploma plus apprenticeship program (4-5 years) or technical school",
+                skills: ["Electrical systems", "Safety protocols", "Troubleshooting", "Blueprint reading", "Customer service"],
+                growthOutlook: "Faster than average - 9% growth projected over the next decade",
+                nextSteps: [
+                    "Enroll in a trade school program for electrical technology",
+                    "Apply for an apprenticeship with a licensed electrician",
+                    "Obtain journeyman and master electrician licenses as you progress"
+                ]
+            },
+            {
+                id: 17,
+                title: "Journalist",
+                description: "Research and write stories for newspapers, magazines, websites, or broadcast media on current events, people, and issues.",
+                riasec: { Realistic: 4, Investigative: 8, Artistic: 7, Social: 7, Enterprising: 6, Conventional: 5 },
+                bigFive: { openness: 8, conscientiousness: 7, extraversion: 7, agreeableness: 6, neuroticism: 5 },
+                workEnvironment: "dynamic",
+                motivationalDrivers: ["truth-seeking", "storytelling", "public awareness"],
+                alignmentFactors: [
+                    "Strong writing and communication skills",
+                    "Curiosity about current events and diverse perspectives",
+                    "Ability to meet tight deadlines and work under pressure"
+                ],
+                workEnvironmentDesc: "Newsrooms, remote locations, or freelance. Fast-paced with irregular hours, especially for breaking news. Increasingly digital and multimedia-focused.",
+                education: "Bachelor's degree in journalism, communications, or related field",
+                skills: ["Investigative reporting", "Writing", "Interviewing", "Media law", "Digital storytelling"],
+                growthOutlook: "Decline of 9% projected over the next decade, but digital media creating new opportunities",
+                nextSteps: [
+                    "Build a strong writing portfolio with diverse topics",
+                    "Gain experience through internships at news organizations",
+                    "Develop multimedia skills (photography, video, podcasting)"
+                ]
+            },
+            {
+                id: 18,
+                title: "Chef",
+                description: "Direct the preparation, cooking, and presentation of meals in restaurants, hotels, or other food service establishments.",
+                riasec: { Realistic: 8, Investigative: 5, Artistic: 8, Social: 6, Enterprising: 7, Conventional: 5 },
+                bigFive: { openness: 8, conscientiousness: 7, extraversion: 7, agreeableness: 6, neuroticism: 5 },
+                workEnvironment: "fast-paced",
+                motivationalDrivers: ["creativity", "culinary excellence", "team leadership"],
+                alignmentFactors: [
+                    "Passion for food and culinary arts",
+                    "Creativity in recipe development and presentation",
+                    "Ability to work in high-pressure, fast-paced kitchen environments"
+                ],
+                workEnvironmentDesc: "Commercial kitchens with high heat, noise, and physical demands. Long hours, including nights, weekends, and holidays. Hierarchical team structure.",
+                education: "Culinary arts degree or apprenticeship; experience often valued over formal education",
+                skills: ["Culinary techniques", "Menu planning", "Kitchen management", "Food safety", "Creativity"],
+                growthOutlook: "Faster than average - 15% growth projected over the next decade",
+                nextSteps: [
+                    "Attend a culinary school or start as a line cook to gain experience",
+                    "Work under experienced chefs to learn techniques and kitchen management",
+                    "Specialize in a cuisine or dietary approach to differentiate yourself"
+                ]
+            },
+            {
+                id: 19,
+                title: "Civil Engineer",
+                description: "Design, build, supervise, operate, and maintain construction projects and systems in the public and private sector.",
+                riasec: { Realistic: 8, Investigative: 7, Artistic: 5, Social: 5, Enterprising: 6, Conventional: 8 },
+                bigFive: { openness: 6, conscientiousness: 9, extraversion: 6, agreeableness: 6, neuroticism: 3 },
+                workEnvironment: "structured",
+                motivationalDrivers: ["problem-solving", "tangible impact", "technical challenges"],
+                alignmentFactors: [
+                    "Strong mathematical and analytical skills",
+                    "Interest in infrastructure and urban planning",
+                    "Attention to detail in design and safety considerations"
+                ],
+                workEnvironmentDesc: "Offices for design work and construction sites for project oversight. Combination of computer modeling and field supervision.",
+                education: "Bachelor's degree in civil engineering; Professional Engineer (PE) license required for advancement",
+                skills: ["Engineering principles", "CAD software", "Project management", "Regulatory compliance", "Problem-solving"],
+                growthOutlook: "Faster than average - 8% growth projected over the next decade",
+                nextSteps: [
+                    "Pursue a degree in civil engineering from an ABET-accredited program",
+                    "Gain experience through internships with engineering firms",
+                    "Work toward obtaining your Professional Engineer license"
+                ]
+            },
+            {
+                id: 20,
+                title: "Social Worker",
+                description: "Help people solve and cope with problems in their everyday lives, with clinical social workers diagnosing and treating mental, behavioral, and emotional issues.",
+                riasec: { Realistic: 4, Investigative: 5, Artistic: 5, Social: 9, Enterprising: 4, Conventional: 6 },
+                bigFive: { openness: 7, conscientiousness: 8, extraversion: 6, agreeableness: 9, neuroticism: 3 },
+                workEnvironment: "collaborative",
+                motivationalDrivers: ["helping others", "social justice", "advocacy"],
+                alignmentFactors: [
+                    "Strong empathy and active listening skills",
+                    "Commitment to social justice and equity",
+                    "Ability to navigate complex social systems and advocate for clients"
+                ],
+                workEnvironmentDesc: "Hospitals, schools, government agencies, or non-profits. Direct client work, case management, and collaboration with other professionals.",
+                education: "Bachelor's degree for some positions; Master of Social Work (MSW) required for clinical roles",
+                skills: ["Crisis intervention", "Case management", "Advocacy", "Active listening", "Cultural competence"],
+                growthOutlook: "Faster than average - 12% growth projected over the next decade",
+                nextSteps: [
+                    "Earn a degree in social work or related field",
+                    "Gain experience through internships in social service agencies",
+                    "Pursue clinical licensure if interested in therapy roles"
+                ]
+            },
+            {
+                id: 21,
+                title: "Data Scientist",
+                description: "Extract insights from large amounts of data using statistical analysis, machine learning, and programming to solve complex business problems.",
+                riasec: { Realistic: 6, Investigative: 9, Artistic: 5, Social: 5, Enterprising: 5, Conventional: 8 },
+                bigFive: { openness: 8, conscientiousness: 8, extraversion: 5, agreeableness: 6, neuroticism: 3 },
+                workEnvironment: "structured",
+                motivationalDrivers: ["intellectual challenge", "problem-solving", "data-driven impact"],
+                alignmentFactors: [
+                    "Strong mathematical and statistical skills",
+                    "Programming ability and comfort with complex algorithms",
+                    "Curiosity to uncover patterns and insights in data"
+                ],
+                workEnvironmentDesc: "Tech companies, research institutions, or corporate analytics departments. Primarily computer-based work with collaboration across teams.",
+                education: "Master's degree in data science, statistics, computer science, or related field",
+                skills: ["Machine learning", "Python/R", "Statistical modeling", "Data visualization", "Big data technologies"],
+                growthOutlook: "Much faster than average - 36% growth projected over the next decade",
+                nextSteps: [
+                    "Develop strong foundations in statistics and programming",
+                    "Learn machine learning frameworks and data analysis tools",
+                    "Work on real-world projects to build a portfolio"
+                ]
+            },
+            {
+                id: 22,
+                title: "Artist (Fine Arts)",
+                description: "Create original artwork using various media such as painting, sculpture, or digital formats for exhibition and sale.",
+                riasec: { Realistic: 4, Investigative: 5, Artistic: 9, Social: 5, Enterprising: 6, Conventional: 4 },
+                bigFive: { openness: 9, conscientiousness: 6, extraversion: 5, agreeableness: 6, neuroticism: 5 },
+                workEnvironment: "creative",
+                motivationalDrivers: ["creative expression", "aesthetic exploration", "personal vision"],
+                alignmentFactors: [
+                    "Strong artistic talent and creative vision",
+                    "Persistence and resilience in the face of rejection",
+                    "Ability to work independently with self-motivation"
+                ],
+                workEnvironmentDesc: "Studios, galleries, or freelance. Highly independent work with irregular income. Requires self-promotion and business management skills.",
+                education: "Bachelor's or Master of Fine Arts (BFA/MFA) degree; formal education not always required",
+                skills: ["Artistic techniques", "Concept development", "Portfolio development", "Gallery relations", "Business management"],
+                growthOutlook: "Slower than average - 6% decline projected over the next decade, but digital art creating new opportunities",
+                nextSteps: [
+                    "Develop a distinctive artistic style and body of work",
+                    "Build relationships with galleries and art communities",
+                    "Learn business skills for marketing and selling your artwork"
+                ]
+            },
+            {
+                id: 23,
+                title: "Pharmacist",
+                description: "Dispense prescription medications to patients and offer expertise in the safe use of prescriptions.",
+                riasec: { Realistic: 7, Investigative: 8, Artistic: 3, Social: 7, Enterprising: 5, Conventional: 9 },
+                bigFive: { openness: 6, conscientiousness: 9, extraversion: 6, agreeableness: 7, neuroticism: 3 },
+                workEnvironment: "structured",
+                motivationalDrivers: ["helping others", "scientific knowledge", "precision"],
+                alignmentFactors: [
+                    "Strong attention to detail and accuracy",
+                    "Knowledge of chemistry and pharmacology",
+                    "Ability to communicate complex information to patients"
+                ],
+                workEnvironmentDesc: "Pharmacies, hospitals, or pharmaceutical companies. Structured environment with strict protocols and high responsibility for patient safety.",
+                education: "Doctor of Pharmacy (Pharm.D.) degree and state licensure",
+                skills: ["Pharmacology", "Patient counseling", "Medication safety", "Attention to detail", "Regulatory compliance"],
+                growthOutlook: "Average - 3% growth projected over the next decade",
+                nextSteps: [
+                    "Complete prerequisite courses for pharmacy school",
+                    "Take the Pharmacy College Admission Test (PCAT)",
+                    "Apply to Doctor of Pharmacy programs and complete residency if desired"
+                ]
+            },
+            {
+                id: 24,
+                title: "Lawyer",
+                description: "Advise and represent clients on legal issues and disputes, conducting research and preparing legal documents.",
+                riasec: { Realistic: 5, Investigative: 8, Artistic: 4, Social: 6, Enterprising: 8, Conventional: 9 },
+                bigFive: { openness: 7, conscientiousness: 9, extraversion: 7, agreeableness: 5, neuroticism: 5 },
+                workEnvironment: "structured",
+                motivationalDrivers: ["advocacy", "intellectual challenge", "justice"],
+                alignmentFactors: [
+                    "Strong analytical and critical thinking skills",
+                    "Excellent written and verbal communication abilities",
+                    "Ability to construct logical arguments and think strategically"
+                ],
+                workEnvironmentDesc: "Law firms, corporations, government agencies, or self-employed. Long hours, high pressure, and extensive research and writing requirements.",
+                education: "Bachelor's degree and Juris Doctor (J.D.) from law school; bar examination required",
+                skills: ["Legal research", "Writing", "Oral advocacy", "Analytical thinking", "Negotiation"],
+                growthOutlook: "Average - 4% growth projected over the next decade",
+                nextSteps: [
+                    "Pursue a bachelor's degree with strong emphasis on writing and critical thinking",
+                    "Take the Law School Admission Test (LSAT)",
+                    "Apply to accredited law schools and prepare for the bar exam"
+                ]
+            },
+            {
+                id: 25,
+                title: "Web Developer",
+                description: "Build and maintain websites and web applications, working on both the visible aspects and underlying code structure.",
+                riasec: { Realistic: 5, Investigative: 7, Artistic: 6, Social: 4, Enterprising: 4, Conventional: 7 },
+                bigFive: { openness: 7, conscientiousness: 7, extraversion: 5, agreeableness: 5, neuroticism: 4 },
+                workEnvironment: "structured",
+                motivationalDrivers: ["problem-solving", "technical challenges", "creative implementation"],
+                alignmentFactors: [
+                    "Strong logical thinking and problem-solving skills",
+                    "Interest in technology and how websites function",
+                    "Attention to detail in coding and debugging"
+                ],
+                workEnvironmentDesc: "Tech companies, agencies, or freelance. Primarily computer-based work with collaboration on design and functionality requirements.",
+                education: "Bachelor's degree in computer science or related field; coding bootcamps also common",
+                skills: ["HTML/CSS", "JavaScript", "Frameworks (React, Angular)", "Responsive design", "Debugging"],
+                growthOutlook: "Much faster than average - 13% growth projected over the next decade",
+                nextSteps: [
+                    "Learn front-end technologies (HTML, CSS, JavaScript)",
+                    "Practice building websites and web applications",
+                    "Explore back-end development to become a full-stack developer"
+                ]
+            },
+            {
+                id: 26,
+                title: "Veterinarian",
+                description: "Diagnose and treat diseases and injuries in animals, providing preventive care and educating pet owners.",
+                riasec: { Realistic: 8, Investigative: 8, Artistic: 4, Social: 8, Enterprising: 5, Conventional: 7 },
+                bigFive: { openness: 7, conscientiousness: 8, extraversion: 6, agreeableness: 8, neuroticism: 4 },
+                workEnvironment: "structured",
+                motivationalDrivers: ["helping animals", "scientific application", "problem-solving"],
+                alignmentFactors: [
+                    "Strong scientific knowledge and analytical skills",
+                    "Compassion for animals and their owners",
+                    "Manual dexterity and ability to perform medical procedures"
+                ],
+                workEnvironmentDesc: "Veterinary clinics, animal hospitals, or mobile services. Combination of office work, surgical procedures, and emergency care.",
+                education: "Doctor of Veterinary Medicine (DVM) degree and state licensure",
+                skills: ["Animal medicine", "Surgery", "Diagnosis", "Client communication", "Emotional resilience"],
+                growthOutlook: "Faster than average - 19% growth projected over the next decade",
+                nextSteps: [
+                    "Complete pre-veterinary coursework in college",
+                    "Gain experience working with animals through volunteering or employment",
+                    "Apply to accredited veterinary schools"
+                ]
+            },
+            {
+                id: 27,
+                title: "Accountant",
+                description: "Examine, organize, and analyze financial records, ensuring accuracy and compliance with laws and regulations.",
+                riasec: { Realistic: 5, Investigative: 7, Artistic: 3, Social: 5, Enterprising: 6, Conventional: 9 },
+                bigFive: { openness: 5, conscientiousness: 9, extraversion: 5, agreeableness: 6, neuroticism: 3 },
+                workEnvironment: "structured",
+                motivationalDrivers: ["accuracy", "financial systems", "professional stability"],
+                alignmentFactors: [
+                    "Strong attention to detail and numerical accuracy",
+                    "Organizational skills and systematic approach",
+                    "Understanding of financial principles and regulations"
+                ],
+                workEnvironmentDesc: "Offices in accounting firms, corporations, or government. Structured environment with seasonal peaks (tax season) and strict deadlines.",
+                education: "Bachelor's degree in accounting or related field; CPA certification highly valued",
+                skills: ["Financial reporting", "Tax preparation", "Auditing", "Accounting software", "Regulatory compliance"],
+                growthOutlook: "Average - 6% growth projected over the next decade",
+                nextSteps: [
+                    "Pursue a degree in accounting with coursework in tax and auditing",
+                    "Gain experience through internships at accounting firms",
+                    "Prepare for the Certified Public Accountant (CPA) exam"
+                ]
+            },
+            {
+                id: 28,
+                title: "Actor",
+                description: "Portray characters in theater, film, television, or other performing arts media, interpreting scripts and bringing characters to life.",
+                riasec: { Realistic: 3, Investigative: 5, Artistic: 9, Social: 8, Enterprising: 6, Conventional: 3 },
+                bigFive: { openness: 8, conscientiousness: 6, extraversion: 8, agreeableness: 7, neuroticism: 6 },
+                workEnvironment: "creative",
+                motivationalDrivers: ["creative expression", "performance", "storytelling"],
+                alignmentFactors: [
+                    "Strong emotional expressiveness and range",
+                    "Memorization skills and ability to embody different characters",
+                    "Resilience in the face of rejection and irregular work"
+                ],
+                workEnvironmentDesc: "Theaters, film/TV sets, or freelance. Irregular hours, auditions, and performances. Highly competitive with variable income.",
+                education: "Bachelor's degree in theater or performing arts; formal education not required but beneficial",
+                skills: ["Acting techniques", "Voice and movement", "Script analysis", "Improvisation", "Auditioning"],
+                growthOutlook: "Average - 4% growth projected over the next decade",
+                nextSteps: [
+                    "Train in various acting techniques (Stanislavski, Meisner, etc.)",
+                    "Gain experience through community theater and student films",
+                    "Create a demo reel and build relationships with casting directors"
+                ]
+            },
+            {
+                id: 29,
+                title: "Urban Planner",
+                description: "Develop plans and programs for land use in urban areas, focusing on creating communities, accommodating population growth, and revitalizing facilities.",
+                riasec: { Realistic: 6, Investigative: 7, Artistic: 6, Social: 7, Enterprising: 6, Conventional: 7 },
+                bigFive: { openness: 8, conscientiousness: 8, extraversion: 6, agreeableness: 7, neuroticism: 3 },
+                workEnvironment: "collaborative",
+                motivationalDrivers: ["community impact", "sustainability", "problem-solving"],
+                alignmentFactors: [
+                    "Interest in cities, communities, and urban development",
+                    "Ability to balance competing interests and constraints",
+                    "Spatial reasoning and understanding of infrastructure systems"
+                ],
+                workEnvironmentDesc: "Government agencies, consulting firms, or non-profits. Combination of office work, public meetings, and site visits to urban areas.",
+                education: "Master's degree in urban planning; bachelor's degree in related field for entry-level",
+                skills: ["GIS mapping", "Community engagement", "Zoning regulations", "Sustainability planning", "Policy analysis"],
+                growthOutlook: "Faster than average - 7% growth projected over the next decade",
+                nextSteps: [
+                    "Pursue a degree in urban planning or related field (geography, environmental studies)",
+                    "Gain experience through internships with planning departments",
+                    "Learn geographic information systems (GIS) software"
+                ]
+            },
+            {
+                id: 30,
+                title: "Physical Therapist",
+                description: "Help injured or ill people improve movement and manage pain through therapeutic exercises and treatments.",
+                riasec: { Realistic: 8, Investigative: 7, Artistic: 5, Social: 9, Enterprising: 5, Conventional: 6 },
+                bigFive: { openness: 6, conscientiousness: 9, extraversion: 7, agreeableness: 9, neuroticism: 3 },
+                workEnvironment: "structured",
+                motivationalDrivers: ["helping others", "physical rehabilitation", "patient progress"],
+                alignmentFactors: [
+                    "Strong interpersonal skills and empathy",
+                    "Knowledge of human anatomy and biomechanics",
+                    "Physical stamina and manual dexterity"
+                ],
+                workEnvironmentDesc: "Hospitals, clinics, or private practices. Hands-on work with patients requiring physical assistance and demonstration of exercises.",
+                education: "Doctor of Physical Therapy (DPT) degree and state licensure",
+                skills: ["Therapeutic exercises", "Manual therapy", "Patient assessment", "Communication", "Treatment planning"],
+                growthOutlook: "Much faster than average - 17% growth projected over the next decade",
+                nextSteps: [
+                    "Complete prerequisite science courses for DPT programs",
+                    "Gain experience through volunteering or working with physical therapists",
+                    "Apply to accredited Doctor of Physical Therapy programs"
+                ]
+            },
+            {
+                id: 31,
+                title: "Software Architect",
+                description: "Design high-level software structures and make critical technical decisions that guide development teams in building complex systems.",
+                riasec: { Realistic: 4, Investigative: 9, Artistic: 6, Social: 5, Enterprising: 6, Conventional: 7 },
+                bigFive: { openness: 8, conscientiousness: 8, extraversion: 5, agreeableness: 6, neuroticism: 3 },
+                workEnvironment: "structured",
+                motivationalDrivers: ["technical leadership", "system design", "strategic thinking"],
+                alignmentFactors: [
+                    "Deep understanding of software design patterns and principles",
+                    "Ability to see the big picture while understanding technical details",
+                    "Strong communication skills to guide development teams"
+                ],
+                workEnvironmentDesc: "Tech companies and large organizations. Strategic role that bridges technical teams and business stakeholders with significant decision-making authority.",
+                education: "Bachelor's degree in Computer Science or related field; extensive development experience required",
+                skills: ["System design", "Architecture patterns", "Technical leadership", "Decision-making", "Communication"],
+                growthOutlook: "Much faster than average - 22% growth projected over the next decade",
+                nextSteps: [
+                    "Gain extensive experience as a software developer",
+                    "Study software architecture patterns and enterprise design",
+                    "Develop leadership and communication skills for technical guidance"
+                ]
+            },
+            {
+                id: 32,
+                title: "Research Scientist",
+                description: "Conduct scientific investigations to expand knowledge in fields like biology, chemistry, physics, or social sciences.",
+                riasec: { Realistic: 6, Investigative: 9, Artistic: 6, Social: 5, Enterprising: 4, Conventional: 7 },
+                bigFive: { openness: 9, conscientiousness: 9, extraversion: 5, agreeableness: 6, neuroticism: 3 },
+                workEnvironment: "structured",
+                motivationalDrivers: ["discovery", "knowledge creation", "scientific inquiry"],
+                alignmentFactors: [
+                    "Intense curiosity and desire to understand how things work",
+                    "Patience and persistence in conducting long-term research",
+                    "Strong analytical skills for interpreting complex data"
+                ],
+                workEnvironmentDesc: "Universities, research institutions, or corporate labs. Primarily laboratory or field work with data analysis and scientific writing.",
+                education: "Ph.D. in a scientific field; postdoctoral experience often required",
+                skills: ["Experimental design", "Data analysis", "Scientific writing", "Grant writing", "Critical thinking"],
+                growthOutlook: "Faster than average - 5% growth projected over the next decade",
+                nextSteps: [
+                    "Pursue a Ph.D. in your area of scientific interest",
+                    "Publish research in peer-reviewed journals",
+                    "Apply for postdoctoral positions to deepen expertise"
+                ]
+            },
+            {
+                id: 33,
+                title: "Industrial Designer",
+                description: "Develop the concepts for manufactured products, such as cars, home appliances, and toys, considering both aesthetics and functionality.",
+                riasec: { Realistic: 7, Investigative: 6, Artistic: 8, Social: 5, Enterprising: 5, Conventional: 5 },
+                bigFive: { openness: 8, conscientiousness: 7, extraversion: 6, agreeableness: 6, neuroticism: 4 },
+                workEnvironment: "creative",
+                motivationalDrivers: ["creative problem-solving", "product innovation", "user experience"],
+                alignmentFactors: [
+                    "Strong visual and spatial reasoning skills",
+                    "Understanding of materials, manufacturing processes, and ergonomics",
+                    "Ability to balance aesthetic appeal with practical functionality"
+                ],
+                workEnvironmentDesc: "Design firms, manufacturing companies, or freelance. Combination of sketching, 3D modeling, prototyping, and collaboration with engineers.",
+                education: "Bachelor's degree in industrial design or related field",
+                skills: ["3D modeling", "Sketching", "Prototyping", "User research", "Materials knowledge"],
+                growthOutlook: "Average - 5% growth projected over the next decade",
+                nextSteps: [
+                    "Develop strong sketching and visualization skills",
+                    "Learn 3D modeling software like Rhino or SolidWorks",
+                    "Build a portfolio showcasing product design process"
+                ]
+            },
+            {
+                id: 34,
+                title: "Actuary",
+                description: "Analyze the financial costs of risk and uncertainty using mathematics, statistics, and financial theory to help businesses assess risk.",
+                riasec: { Realistic: 5, Investigative: 9, Artistic: 3, Social: 5, Enterprising: 6, Conventional: 9 },
+                bigFive: { openness: 6, conscientiousness: 9, extraversion: 5, agreeableness: 6, neuroticism: 3 },
+                workEnvironment: "structured",
+                motivationalDrivers: ["analytical challenges", "financial impact", "precision"],
+                alignmentFactors: [
+                    "Exceptional mathematical and statistical abilities",
+                    "Attention to detail and accuracy in complex calculations",
+                    "Ability to communicate risk assessments to non-experts"
+                ],
+                workEnvironmentDesc: "Insurance companies, consulting firms, or government. Office-based work with extensive data analysis and report preparation.",
+                education: "Bachelor's degree in actuarial science, mathematics, or related field; professional certification required",
+                skills: ["Probability", "Statistics", "Financial mathematics", "Risk assessment", "Communication"],
+                growthOutlook: "Faster than average - 24% growth projected over the next decade",
+                nextSteps: [
+                    "Pursue a degree with strong emphasis on mathematics and statistics",
+                    "Begin actuarial exams while in college",
+                    "Gain experience through internships in insurance or finance"
+                ]
+            },
+            {
+                id: 35,
+                title: "Speech-Language Pathologist",
+                description: "Assess, diagnose, treat, and help to prevent communication and swallowing disorders in children and adults.",
+                riasec: { Realistic: 5, Investigative: 6, Artistic: 5, Social: 9, Enterprising: 4, Conventional: 7 },
+                bigFive: { openness: 7, conscientiousness: 8, extraversion: 7, agreeableness: 9, neuroticism: 3 },
+                workEnvironment: "structured",
+                motivationalDrivers: ["helping others", "communication", "patient progress"],
+                alignmentFactors: [
+                    "Strong listening and observational skills",
+                    "Patience and empathy in working with communication challenges",
+                    "Knowledge of language development and neurological processes"
+                ],
+                workEnvironmentDesc: "Hospitals, schools, or private practices. One-on-one therapy sessions with patients requiring customized treatment plans.",
+                education: "Master's degree in speech-language pathology and state licensure",
+                skills: ["Assessment", "Therapy techniques", "Communication", "Documentation", "Parent/caregiver training"],
+                growthOutlook: "Faster than average - 29% growth projected over the next decade",
+                nextSteps: [
+                    "Pursue a degree in communication sciences and disorders",
+                    "Gain experience through clinical observations and volunteer work",
+                    "Apply to accredited master's programs in speech-language pathology"
+                ]
+            },
+            {
+                id: 36,
+                title: "Operations Manager",
+                description: "Oversee daily operations of an organization or department, ensuring efficiency and effectiveness in processes and resource utilization.",
+                riasec: { Realistic: 6, Investigative: 6, Artistic: 4, Social: 7, Enterprising: 8, Conventional: 8 },
+                bigFive: { openness: 6, conscientiousness: 9, extraversion: 7, agreeableness: 6, neuroticism: 4 },
+                workEnvironment: "structured",
+                motivationalDrivers: ["efficiency", "leadership", "organizational impact"],
+                alignmentFactors: [
+                    "Strong organizational and planning abilities",
+                    "Leadership skills to manage teams and resources",
+                    "Problem-solving skills to optimize processes and resolve issues"
+                ],
+                workEnvironmentDesc: "Offices across various industries. Fast-paced environment managing people, processes, and budgets with regular performance reviews.",
+                education: "Bachelor's degree in business administration or related field; MBA often beneficial",
+                skills: ["Process improvement", "Leadership", "Budgeting", "Problem-solving", "Communication"],
+                growthOutlook: "Average - 6% growth projected over the next decade",
+                nextSteps: [
+                    "Gain experience in operations or management roles",
+                    "Develop expertise in process improvement methodologies",
+                    "Consider pursuing an MBA for advancement opportunities"
+                ]
+            },
+            {
+                id: 37,
+                title: "Environmental Engineer",
+                description: "Use principles of engineering, soil science, biology, and chemistry to develop solutions to environmental problems.",
+                riasec: { Realistic: 8, Investigative: 8, Artistic: 4, Social: 6, Enterprising: 5, Conventional: 7 },
+                bigFive: { openness: 7, conscientiousness: 8, extraversion: 5, agreeableness: 6, neuroticism: 3 },
+                workEnvironment: "mixed",
+                motivationalDrivers: ["environmental impact", "technical solutions", "sustainability"],
+                alignmentFactors: [
+                    "Strong analytical and problem-solving skills",
+                    "Interest in environmental protection and sustainability",
+                    "Knowledge of scientific principles and engineering applications"
+                ],
+                workEnvironmentDesc: "Offices for design work and field sites for environmental assessments. Combination of computer modeling and on-site investigations.",
+                education: "Bachelor's degree in environmental engineering or related field; Professional Engineer license beneficial",
+                skills: ["Environmental systems", "Water treatment", "Pollution control", "Regulatory compliance", "Project management"],
+                growthOutlook: "Faster than average - 5% growth projected over the next decade",
+                nextSteps: [
+                    "Pursue a degree in environmental engineering from an ABET-accredited program",
+                    "Gain experience through internships with environmental consulting firms",
+                    "Consider obtaining a Professional Engineer license"
+                ]
+            },
+            {
+                id: 38,
+                title: "Economist",
+                description: "Research, analyze, and interpret economic data and trends to study how societies use resources to produce goods and services.",
+                riasec: { Realistic: 5, Investigative: 9, Artistic: 5, Social: 6, Enterprising: 7, Conventional: 8 },
+                bigFive: { openness: 8, conscientiousness: 8, extraversion: 5, agreeableness: 5, neuroticism: 4 },
+                workEnvironment: "structured",
+                motivationalDrivers: ["analytical challenges", "policy impact", "economic understanding"],
+                alignmentFactors: [
+                    "Strong mathematical and analytical abilities",
+                    "Interest in economic systems and policy implications",
+                    "Ability to communicate complex economic concepts clearly"
+                ],
+                workEnvironmentDesc: "Government agencies, research institutions, or financial organizations. Primarily computer-based analysis with report writing and presentations.",
+                education: "Master's degree or Ph.D. in economics; bachelor's for some entry-level positions",
+                skills: ["Economic modeling", "Statistical analysis", "Data interpretation", "Policy analysis", "Writing"],
+                growthOutlook: "Faster than average - 13% growth projected over the next decade",
+                nextSteps: [
+                    "Pursue a degree in economics with strong mathematics coursework",
+                    "Gain experience through research assistant positions",
+                    "Consider graduate studies for advanced research roles"
+                ]
+            },
+            {
+                id: 39,
+                title: "Human Resources Manager",
+                description: "Plan, direct, and coordinate administrative functions of an organization, focusing on staffing, training, and employee relations.",
+                riasec: { Realistic: 4, Investigative: 5, Artistic: 4, Social: 8, Enterprising: 8, Conventional: 7 },
+                bigFive: { openness: 6, conscientiousness: 8, extraversion: 8, agreeableness: 7, neuroticism: 4 },
+                workEnvironment: "structured",
+                motivationalDrivers: ["people development", "organizational impact", "conflict resolution"],
+                alignmentFactors: [
+                    "Strong interpersonal and communication skills",
+                    "Fairness and discretion in handling sensitive matters",
+                    "Understanding of employment laws and organizational dynamics"
+                ],
+                workEnvironmentDesc: "Corporate offices across industries. Combination of individual work, meetings with employees, and strategic planning with leadership.",
+                education: "Bachelor's degree in human resources, business, or related field; HR certification beneficial",
+                skills: ["Recruitment", "Employee relations", "Compensation", "Training", "Conflict resolution"],
+                growthOutlook: "Faster than average - 9% growth projected over the next decade",
+                nextSteps: [
+                    "Gain experience in HR generalist or specialist roles",
+                    "Pursue professional certification (PHR, SPHR)",
+                    "Develop expertise in employment law and compensation"
+                ]
+            },
+            {
+                id: 40,
+                title: "Mechatronics Engineer",
+                description: "Design and develop intelligent systems that combine mechanical, electrical, and computer engineering principles, such as robotics and automation.",
+                riasec: { Realistic: 9, Investigative: 8, Artistic: 5, Social: 5, Enterprising: 6, Conventional: 7 },
+                bigFive: { openness: 7, conscientiousness: 8, extraversion: 5, agreeableness: 6, neuroticism: 4 },
+                workEnvironment: "structured",
+                motivationalDrivers: ["technical innovation", "problem-solving", "interdisciplinary work"],
+                alignmentFactors: [
+                    "Strong foundation in multiple engineering disciplines",
+                    "Interest in robotics, automation, and smart systems",
+                    "Ability to integrate mechanical, electrical, and software components"
+                ],
+                workEnvironmentDesc: "Manufacturing, robotics companies, or research labs. Combination of design work, prototyping, and testing of complex electromechanical systems.",
+                education: "Bachelor's degree in mechatronics, mechanical, or electrical engineering",
+                skills: ["Robotics", "Control systems", "Programming", "Sensor integration", "Systems thinking"],
+                growthOutlook: "Faster than average - 8% growth projected over the next decade",
+                nextSteps: [
+                    "Pursue a degree in mechatronics or related engineering field",
+                    "Gain experience with robotics kits and automation projects",
+                    "Learn programming languages used in embedded systems"
+                ]
+            },
+            {
+                id: 41,
+                title: "User Researcher",
+                description: "Study user behaviors, needs, and motivations through observation techniques, task analysis, and other methodologies to inform product design.",
+                riasec: { Realistic: 5, Investigative: 8, Artistic: 6, Social: 8, Enterprising: 5, Conventional: 6 },
+                bigFive: { openness: 8, conscientiousness: 7, extraversion: 7, agreeableness: 8, neuroticism: 3 },
+                workEnvironment: "collaborative",
+                motivationalDrivers: ["understanding people", "improving experiences", "research"],
+                alignmentFactors: [
+                    "Strong empathy and active listening skills",
+                    "Curiosity about human behavior and decision-making",
+                    "Ability to translate qualitative insights into actionable recommendations"
+                ],
+                workEnvironmentDesc: "Tech companies, design agencies, or consulting firms. Combination of interviews, usability testing, data analysis, and team presentations.",
+                education: "Bachelor's or master's degree in psychology, human-computer interaction, or related field",
+                skills: ["Interviewing", "Usability testing", "Qualitative analysis", "Survey design", "Reporting"],
+                growthOutlook: "Much faster than average - 23% growth projected over the next decade",
+                nextSteps: [
+                    "Learn user research methodologies and best practices",
+                    "Gain experience through internships or volunteer research projects",
+                    "Build a portfolio showcasing research case studies"
+                ]
+            },
+            {
+                id: 42,
+                title: "Cybersecurity Analyst",
+                description: "Protect an organization's computer systems and networks by monitoring for security breaches and implementing protective measures.",
+                riasec: { Realistic: 7, Investigative: 9, Artistic: 4, Social: 5, Enterprising: 5, Conventional: 8 },
+                bigFive: { openness: 7, conscientiousness: 9, extraversion: 5, agreeableness: 5, neuroticism: 4 },
+                workEnvironment: "structured",
+                motivationalDrivers: ["problem-solving", "protective role", "technical challenges"],
+                alignmentFactors: [
+                    "Strong analytical skills for identifying vulnerabilities",
+                    "Attention to detail in monitoring security systems",
+                    "Understanding of network infrastructure and security protocols"
+                ],
+                workEnvironmentDesc: "Corporate offices, government agencies, or security firms. Monitoring security systems, responding to threats, and implementing protective measures.",
+                education: "Bachelor's degree in computer science, information technology, or related field",
+                skills: ["Network security", "Risk assessment", "Incident response", "Security tools", "Vulnerability testing"],
+                growthOutlook: "Much faster than average - 35% growth projected over the next decade",
+                nextSteps: [
+                    "Learn networking fundamentals and security principles",
+                    "Gain certifications like CompTIA Security+ or CISSP",
+                    "Practice in cybersecurity labs and capture-the-flag competitions"
+                ]
+            },
+            {
+                id: 43,
+                title: "Technical Writer",
+                description: "Put technical information into easily understandable language for users through manuals, guides, and online help systems.",
+                riasec: { Realistic: 5, Investigative: 6, Artistic: 7, Social: 5, Enterprising: 4, Conventional: 8 },
+                bigFive: { openness: 7, conscientiousness: 8, extraversion: 5, agreeableness: 6, neuroticism: 4 },
+                workEnvironment: "structured",
+                motivationalDrivers: ["clarity", "knowledge sharing", "precision"],
+                alignmentFactors: [
+                    "Strong writing and editing skills",
+                    "Ability to understand complex technical information",
+                    "Patience to document processes thoroughly and accurately"
+                ],
+                workEnvironmentDesc: "Tech companies, manufacturing, or freelance. Primarily computer-based work creating documentation for products and systems.",
+                education: "Bachelor's degree in English, communications, or technical field",
+                skills: ["Technical documentation", "Simplifying complex information", "Editing", "Content management", "Subject matter expertise"],
+                growthOutlook: "Average - 6% growth projected over the next decade",
+                nextSteps: [
+                    "Develop expertise in a technical domain (software, engineering, etc.)",
+                    "Build a portfolio of technical writing samples",
+                    "Learn content management and authoring tools"
+                ]
+            },
+            {
+                id: 44,
+                title: "Supply Chain Manager",
+                description: "Oversee the flow of goods and services, including all processes that transform raw materials into final products.",
+                riasec: { Realistic: 7, Investigative: 6, Artistic: 4, Social: 6, Enterprising: 8, Conventional: 8 },
+                bigFive: { openness: 6, conscientiousness: 9, extraversion: 7, agreeableness: 6, neuroticism: 4 },
+                workEnvironment: "structured",
+                motivationalDrivers: ["efficiency", "logistical challenges", "global impact"],
+                alignmentFactors: [
+                    "Strong organizational and planning abilities",
+                    "Problem-solving skills for logistical challenges",
+                    "Understanding of global markets and transportation systems"
+                ],
+                workEnvironmentDesc: "Corporate offices with global coordination. Managing suppliers, logistics, inventory, and distribution networks with tight cost and time constraints.",
+                education: "Bachelor's degree in supply chain, business, or related field; certifications beneficial",
+                skills: ["Logistics", "Inventory management", "Supplier relations", "Data analysis", "Negotiation"],
+                growthOutlook: "Faster than average - 30% growth projected over the next decade",
+                nextSteps: [
+                    "Gain experience in logistics or operations roles",
+                    "Learn supply chain management software and methodologies",
+                    "Consider professional certifications (CSCP, CPIM)"
+                ]
+            },
+            {
+                id: 45,
+                title: "Genetic Counselor",
+                description: "Provide information and support to people concerned about how family history and genetic testing may affect their health.",
+                riasec: { Realistic: 6, Investigative: 8, Artistic: 5, Social: 9, Enterprising: 4, Conventional: 7 },
+                bigFive: { openness: 7, conscientiousness: 8, extraversion: 6, agreeableness: 9, neuroticism: 3 },
+                workEnvironment: "structured",
+                motivationalDrivers: ["helping others", "scientific knowledge", "ethical considerations"],
+                alignmentFactors: [
+                    "Strong empathy and communication skills",
+                    "Understanding of genetics and inheritance patterns",
+                    "Ability to explain complex information with sensitivity"
+                ],
+                workEnvironmentDesc: "Hospitals, clinics, or genetic testing companies. One-on-one counseling sessions with patients facing difficult health decisions.",
+                education: "Master's degree in genetic counseling and board certification",
+                skills: ["Genetic risk assessment", "Counseling", "Ethical decision-making", "Communication", "Psychosocial support"],
+                growthOutlook: "Much faster than average - 26% growth projected over the next decade",
+                nextSteps: [
+                    "Pursue a degree in biology or genetics",
+                    "Gain experience in healthcare or counseling settings",
+                    "Apply to accredited genetic counseling master's programs"
+                ]
+            },
+            {
+                id: 46,
+                title: "Renewable Energy Engineer",
+                description: "Design and develop systems that generate energy from renewable sources like solar, wind, and hydroelectric power.",
+                riasec: { Realistic: 8, Investigative: 8, Artistic: 5, Social: 6, Enterprising: 6, Conventional: 7 },
+                bigFive: { openness: 7, conscientiousness: 8, extraversion: 5, agreeableness: 6, neuroticism: 3 },
+                workEnvironment: "mixed",
+                motivationalDrivers: ["sustainability", "technical innovation", "environmental impact"],
+                alignmentFactors: [
+                    "Strong engineering and problem-solving skills",
+                    "Passion for environmental sustainability",
+                    "Understanding of energy systems and physics principles"
+                ],
+                workEnvironmentDesc: "Engineering firms, energy companies, or government agencies. Combination of office design work and field visits to renewable energy installations.",
+                education: "Bachelor's degree in engineering (mechanical, electrical, or environmental) with renewable energy focus",
+                skills: ["Energy systems", "Sustainability principles", "Project management", "Regulatory compliance", "Technical design"],
+                growthOutlook: "Much faster than average - 8% growth projected over the next decade",
+                nextSteps: [
+                    "Pursue engineering studies with renewable energy coursework",
+                    "Gain experience through internships with energy companies",
+                    "Learn about energy policy and regulatory frameworks"
+                ]
+            },
+            {
+                id: 47,
+                title: "Data Engineer",
+                description: "Develop, construct, test, and maintain architectures such as databases and large-scale processing systems for data generation and consumption.",
+                riasec: { Realistic: 6, Investigative: 8, Artistic: 5, Social: 4, Enterprising: 5, Conventional: 8 },
+                bigFive: { openness: 7, conscientiousness: 8, extraversion: 5, agreeableness: 5, neuroticism: 3 },
+                workEnvironment: "structured",
+                motivationalDrivers: ["technical infrastructure", "problem-solving", "data systems"],
+                alignmentFactors: [
+                    "Strong programming and systems thinking skills",
+                    "Understanding of database architecture and data pipelines",
+                    "Attention to detail in building reliable data infrastructure"
+                ],
+                workEnvironmentDesc: "Tech companies, financial institutions, or data-driven organizations. Building and maintaining the data infrastructure that supports analytics and machine learning.",
+                education: "Bachelor's degree in computer science, engineering, or related field",
+                skills: ["Database design", "ETL processes", "Big data technologies", "Cloud platforms", "Programming"],
+                growthOutlook: "Much faster than average - 25% growth projected over the next decade",
+                nextSteps: [
+                    "Learn database technologies (SQL, NoSQL)",
+                    "Gain experience with big data platforms (Hadoop, Spark)",
+                    "Understand cloud data services (AWS, Azure, GCP)"
+                ]
+            },
+            {
+                id: 48,
+                title: "Occupational Therapist",
+                description: "Help people across the lifespan participate in the activities they want and need to do through the therapeutic use of everyday activities.",
+                riasec: { Realistic: 7, Investigative: 6, Artistic: 6, Social: 9, Enterprising: 4, Conventional: 6 },
+                bigFive: { openness: 7, conscientiousness: 8, extraversion: 7, agreeableness: 9, neuroticism: 3 },
+                workEnvironment: "structured",
+                motivationalDrivers: ["helping others", "functional improvement", "holistic approach"],
+                alignmentFactors: [
+                    "Strong empathy and interpersonal skills",
+                    "Creativity in adapting activities to individual needs",
+                    "Knowledge of human development and rehabilitation"
+                ],
+                workEnvironmentDesc: "Hospitals, schools, or private practices. One-on-one therapy sessions helping clients regain or develop skills for daily living and work.",
+                education: "Master's degree in occupational therapy and state licensure",
+                skills: ["Therapeutic activities", "Assessment", "Adaptive equipment", "Client education", "Documentation"],
+                growthOutlook: "Faster than average - 17% growth projected over the next decade",
+                nextSteps: [
+                    "Pursue a degree in occupational therapy or related field",
+                    "Gain experience through volunteer work with rehabilitation populations",
+                    "Apply to accredited master's programs in occupational therapy"
+                ]
+            },
+            {
+                id: 49,
+                title: "AI/Machine Learning Engineer",
+                description: "Design and implement machine learning applications and systems, developing algorithms that enable computers to learn from and make decisions based on data.",
+                riasec: { Realistic: 5, Investigative: 9, Artistic: 6, Social: 4, Enterprising: 5, Conventional: 7 },
+                bigFive: { openness: 8, conscientiousness: 8, extraversion: 5, agreeableness: 5, neuroticism: 4 },
+                workEnvironment: "structured",
+                motivationalDrivers: ["technical innovation", "problem-solving", "cutting-edge technology"],
+                alignmentFactors: [
+                    "Strong mathematical and programming skills",
+                    "Understanding of machine learning algorithms and neural networks",
+                    "Ability to work with large datasets and complex computational systems"
+                ],
+                workEnvironmentDesc: "Tech companies, research labs, or AI startups. Developing and training machine learning models, with collaboration across data science teams.",
+                education: "Bachelor's or master's degree in computer science, mathematics, or related field",
+                skills: ["Machine learning", "Python", "Neural networks", "Deep learning frameworks", "Data processing"],
+                growthOutlook: "Much faster than average - 40% growth projected over the next decade",
+                nextSteps: [
+                    "Develop strong foundations in mathematics and programming",
+                    "Learn machine learning frameworks (TensorFlow, PyTorch)",
+                    "Work on projects applying ML to real-world problems"
+                ]
+            },
+            {
+                id: 50,
+                title: "Sustainability Consultant",
+                description: "Advise organizations on how to operate in a more environmentally sustainable way, reducing environmental impact and improving efficiency.",
+                riasec: { Realistic: 6, Investigative: 7, Artistic: 6, Social: 7, Enterprising: 7, Conventional: 6 },
+                bigFive: { openness: 8, conscientiousness: 8, extraversion: 7, agreeableness: 7, neuroticism: 3 },
+                workEnvironment: "collaborative",
+                motivationalDrivers: ["environmental impact", "systems thinking", "organizational change"],
+                alignmentFactors: [
+                    "Strong understanding of environmental systems and sustainability principles",
+                    "Ability to analyze organizational processes and recommend improvements",
+                    "Communication skills to influence organizational change"
+                ],
+                workEnvironmentDesc: "Consulting firms or independent. Working with various organizations to assess environmental impact and develop sustainability strategies.",
+                education: "Bachelor's or master's degree in environmental science, sustainability, or related field",
+                skills: ["Sustainability assessment", "Life cycle analysis", "Stakeholder engagement", "Reporting frameworks", "Change management"],
+                growthOutlook: "Faster than average - 11% growth projected over the next decade",
+                nextSteps: [
+                    "Gain knowledge in sustainability frameworks and certifications",
+                    "Develop expertise in specific industries (manufacturing, construction, etc.)",
+                    "Build skills in data analysis and sustainability reporting"
+                ]
+            }
+        ];
+
+        // Questionnaire data with exactly 40 questions across all dimensions
+        const questions = [
+            {
+                id: 1,
+                text: "I enjoy solving complex problems that require logical thinking and analysis.",
+                type: "likert",
+                dimension: ["Investigative", "analytical", "problem-solving"],
+                options: [
+                    "Strongly Disagree",
+                    "Disagree",
+                    "Neutral",
+                    "Agree",
+                    "Strongly Agree"
+                ]
+            },
+            {
+                id: 2,
+                text: "When faced with a challenge, I prefer to work independently rather than in a team.",
+                type: "likert",
+                dimension: ["independent", "collaborative", "work style"],
+                options: [
+                    "Strongly Disagree",
+                    "Disagree",
+                    "Neutral",
+                    "Agree",
+                    "Strongly Agree"
+                ]
+            },
+            {
+                id: 3,
+                text: "I find great satisfaction in creating original work, whether it's art, writing, or innovative solutions.",
+                type: "likert",
+                dimension: ["Artistic", "creative", "innovation"],
+                options: [
+                    "Strongly Disagree",
+                    "Disagree",
+                    "Neutral",
+                    "Agree",
+                    "Strongly Agree"
+                ]
+            },
+            {
+                id: 4,
+                text: "I am energized by spending time with people and find social interactions rewarding.",
+                type: "likert",
+                dimension: ["Social", "extraversion", "people orientation"],
+                options: [
+                    "Strongly Disagree",
+                    "Disagree",
+                    "Neutral",
+                    "Agree",
+                    "Strongly Agree"
+                ]
+            },
+            {
+                id: 5,
+                text: "I am drawn to activities that involve working with tools, machines, or physical tasks.",
+                type: "likert",
+                dimension: ["Realistic", "hands-on", "practical"],
+                options: [
+                    "Strongly Disagree",
+                    "Disagree",
+                    "Neutral",
+                    "Agree",
+                    "Strongly Agree"
+                ]
+            },
+            {
+                id: 6,
+                text: "I enjoy persuading or influencing others and feel comfortable taking leadership roles.",
+                type: "likert",
+                dimension: ["Enterprising", "leadership", "influence"],
+                options: [
+                    "Strongly Disagree",
+                    "Disagree",
+                    "Neutral",
+                    "Agree",
+                    "Strongly Agree"
+                ]
+            },
+            {
+                id: 7,
+                text: "I prefer structured environments with clear procedures and organized systems.",
+                type: "likert",
+                dimension: ["Conventional", "structured", "organization"],
+                options: [
+                    "Strongly Disagree",
+                    "Disagree",
+                    "Neutral",
+                    "Agree",
+                    "Strongly Agree"
+                ]
+            },
+            {
+                id: 8,
+                text: "I am naturally curious about how things work and enjoy conducting research or investigations.",
+                type: "likert",
+                dimension: ["Investigative", "curiosity", "research"],
+                options: [
+                    "Strongly Disagree",
+                    "Disagree",
+                    "Neutral",
+                    "Agree",
+                    "Strongly Agree"
+                ]
+            },
+            {
+                id: 9,
+                text: "I value harmony in relationships and go out of my way to help others in need.",
+                type: "likert",
+                dimension: ["Social", "empathy", "helping"],
+                options: [
+                    "Strongly Disagree",
+                    "Disagree",
+                    "Neutral",
+                    "Agree",
+                    "Strongly Agree"
+                ]
+            },
+            {
+                id: 10,
+                text: "I am comfortable taking risks and trying new approaches, even when outcomes are uncertain.",
+                type: "likert",
+                dimension: ["risk-taking", "innovation", "adaptability"],
+                options: [
+                    "Strongly Disagree",
+                    "Disagree",
+                    "Neutral",
+                    "Agree",
+                    "Strongly Agree"
+                ]
+            },
+            {
+                id: 11,
+                text: "I enjoy working outdoors or in environments connected to nature.",
+                type: "likert",
+                dimension: ["outdoor", "nature", "Realistic"],
+                options: [
+                    "Strongly Disagree",
+                    "Disagree",
+                    "Neutral",
+                    "Agree",
+                    "Strongly Agree"
+                ]
+            },
+            {
+                id: 12,
+                text: "I am highly organized and pay close attention to details in my work.",
+                type: "likert",
+                dimension: ["conscientiousness", "Conventional", "attention to detail"],
+                options: [
+                    "Strongly Disagree",
+                    "Disagree",
+                    "Neutral",
+                    "Agree",
+                    "Strongly Agree"
+                ]
+            },
+            {
+                id: 13,
+                text: "I am motivated by the opportunity to make a positive impact on society or the environment.",
+                type: "likert",
+                dimension: ["social impact", "values", "purpose"],
+                options: [
+                    "Strongly Disagree",
+                    "Disagree",
+                    "Neutral",
+                    "Agree",
+                    "Strongly Agree"
+                ]
+            },
+            {
+                id: 14,
+                text: "I enjoy analyzing data and identifying patterns or trends.",
+                type: "likert",
+                dimension: ["Investigative", "analytical", "data-driven"],
+                options: [
+                    "Strongly Disagree",
+                    "Disagree",
+                    "Neutral",
+                    "Agree",
+                    "Strongly Agree"
+                ]
+            },
+            {
+                id: 15,
+                text: "I feel most fulfilled when I can express my creativity through my work.",
+                type: "likert",
+                dimension: ["Artistic", "creative", "self-expression"],
+                options: [
+                    "Strongly Disagree",
+                    "Disagree",
+                    "Neutral",
+                    "Agree",
+                    "Strongly Agree"
+                ]
+            },
+            {
+                id: 16,
+                text: "I am financially motivated and value compensation and benefits highly in a career.",
+                type: "likert",
+                dimension: ["financial security", "extrinsic", "career advancement"],
+                options: [
+                    "Strongly Disagree",
+                    "Disagree",
+                    "Neutral",
+                    "Agree",
+                    "Strongly Agree"
+                ]
+            },
+            {
+                id: 17,
+                text: "I prefer jobs that allow me autonomy and independence in how I complete tasks.",
+                type: "likert",
+                dimension: ["autonomy", "independent", "work style"],
+                options: [
+                    "Strongly Disagree",
+                    "Disagree",
+                    "Neutral",
+                    "Agree",
+                    "Strongly Agree"
+                ]
+            },
+            {
+                id: 18,
+                text: "I enjoy teaching or mentoring others and sharing my knowledge.",
+                type: "likert",
+                dimension: ["Social", "helping", "mentoring"],
+                options: [
+                    "Strongly Disagree",
+                    "Disagree",
+                    "Neutral",
+                    "Agree",
+                    "Strongly Agree"
+                ]
+            },
+            {
+                id: 19,
+                text: "I am drawn to careers in science, technology, engineering, or mathematics (STEM) fields.",
+                type: "likert",
+                dimension: ["Investigative", "technology", "STEM"],
+                options: [
+                    "Strongly Disagree",
+                    "Disagree",
+                    "Neutral",
+                    "Agree",
+                    "Strongly Agree"
+                ]
+            },
+            {
+                id: 20,
+                text: "I value recognition and achievement in my professional life.",
+                type: "likert",
+                dimension: ["achievement", "recognition", "career advancement"],
+                options: [
+                    "Strongly Disagree",
+                    "Disagree",
+                    "Neutral",
+                    "Agree",
+                    "Strongly Agree"
+                ]
+            },
+            {
+                id: 21,
+                text: "When solving problems, I tend to rely on established methods rather than experimenting with new approaches.",
+                type: "likert",
+                dimension: ["Conventional", "structured", "procedural"],
+                options: [
+                    "Strongly Disagree",
+                    "Disagree",
+                    "Neutral",
+                    "Agree",
+                    "Strongly Agree"
+                ]
+            },
+            {
+                id: 22,
+                text: "I enjoy working with numbers and financial data.",
+                type: "likert",
+                dimension: ["Conventional", "analytical", "financial"],
+                options: [
+                    "Strongly Disagree",
+                    "Disagree",
+                    "Neutral",
+                    "Agree",
+                    "Strongly Agree"
+                ]
+            },
+            {
+                id: 23,
+                text: "I am interested in starting my own business or being an entrepreneur.",
+                type: "likert",
+                dimension: ["Enterprising", "autonomy", "innovation"],
+                options: [
+                    "Strongly Disagree",
+                    "Disagree",
+                    "Neutral",
+                    "Agree",
+                    "Strongly Agree"
+                ]
+            },
+            {
+                id: 24,
+                text: "I prefer concrete, practical tasks over abstract theoretical concepts.",
+                type: "likert",
+                dimension: ["Realistic", "hands-on", "practical"],
+                options: [
+                    "Strongly Disagree",
+                    "Disagree",
+                    "Neutral",
+                    "Agree",
+                    "Strongly Agree"
+                ]
+            },
+            {
+                id: 25,
+                text: "I am highly adaptable and comfortable with change and uncertainty in the workplace.",
+                type: "likert",
+                dimension: ["adaptability", "dynamic", "resilience"],
+                options: [
+                    "Strongly Disagree",
+                    "Disagree",
+                    "Neutral",
+                    "Agree",
+                    "Strongly Agree"
+                ]
+            },
+            {
+                id: 26,
+                text: "I enjoy reading and learning about artistic and cultural topics.",
+                type: "likert",
+                dimension: ["Artistic", "openness", "cultural"],
+                options: [
+                    "Strongly Disagree",
+                    "Disagree",
+                    "Neutral",
+                    "Agree",
+                    "Strongly Agree"
+                ]
+            },
+            {
+                id: 27,
+                text: "I am motivated by opportunities for continuous learning and skill development.",
+                type: "likert",
+                dimension: ["learning", "growth", "development"],
+                options: [
+                    "Strongly Disagree",
+                    "Disagree",
+                    "Neutral",
+                    "Agree",
+                    "Strongly Agree"
+                ]
+            },
+            {
+                id: 28,
+                text: "I prefer working in fast-paced, dynamic environments rather than slow, methodical ones.",
+                type: "likert",
+                dimension: ["dynamic", "pace", "energy"],
+                options: [
+                    "Strongly Disagree",
+                    "Disagree",
+                    "Neutral",
+                    "Agree",
+                    "Strongly Agree"
+                ]
+            },
+            {
+                id: 29,
+                text: "I value work-life balance and personal time as much as professional achievement.",
+                type: "likert",
+                dimension: ["work-life balance", "values", "priorities"],
+                options: [
+                    "Strongly Disagree",
+                    "Disagree",
+                    "Neutral",
+                    "Agree",
+                    "Strongly Agree"
+                ]
+            },
+            {
+                id: 30,
+                text: "I am interested in healthcare and helping people improve their physical or mental well-being.",
+                type: "likert",
+                dimension: ["Social", "helping", "healthcare"],
+                options: [
+                    "Strongly Disagree",
+                    "Disagree",
+                    "Neutral",
+                    "Agree",
+                    "Strongly Agree"
+                ]
+            },
+            {
+                id: 31,
+                text: "I enjoy building or fixing things with my hands.",
+                type: "likert",
+                dimension: ["Realistic", "hands-on", "practical"],
+                options: [
+                    "Strongly Disagree",
+                    "Disagree",
+                    "Neutral",
+                    "Agree",
+                    "Strongly Agree"
+                ]
+            },
+            {
+                id: 32,
+                text: "I am comfortable presenting ideas to groups and feel confident in leadership situations.",
+                type: "likert",
+                dimension: ["Enterprising", "leadership", "communication"],
+                options: [
+                    "Strongly Disagree",
+                    "Disagree",
+                    "Neutral",
+                    "Agree",
+                    "Strongly Agree"
+                ]
+            },
+            {
+                id: 33,
+                text: "I am fascinated by how the human mind works and human behavior.",
+                type: "likert",
+                dimension: ["Investigative", "psychology", "understanding"],
+                options: [
+                    "Strongly Disagree",
+                    "Disagree",
+                    "Neutral",
+                    "Agree",
+                    "Strongly Agree"
+                ]
+            },
+            {
+                id: 34,
+                text: "I prefer jobs that involve routine and predictable tasks over those that require constant innovation.",
+                type: "likert",
+                dimension: ["Conventional", "structured", "predictability"],
+                options: [
+                    "Strongly Disagree",
+                    "Disagree",
+                    "Neutral",
+                    "Agree",
+                    "Strongly Agree"
+                ]
+            },
+            {
+                id: 35,
+                text: "I am passionate about environmental conservation and sustainability issues.",
+                type: "likert",
+                dimension: ["social impact", "nature", "sustainability"],
+                options: [
+                    "Strongly Disagree",
+                    "Disagree",
+                    "Neutral",
+                    "Agree",
+                    "Strongly Agree"
+                ]
+            },
+            {
+                id: 36,
+                text: "Rank the following work values in order of importance to you (1 = most important, 5 = least important):",
+                type: "ranking",
+                dimension: ["values", "priorities"],
+                options: [
+                    "Financial Security",
+                    "Work-Life Balance",
+                    "Social Impact",
+                    "Creative Expression",
+                    "Career Advancement"
+                ]
+            },
+            {
+                id: 37,
+                text: "If I had to choose, I would prefer a career that:",
+                type: "multiple-choice",
+                dimension: ["preferences", "work style"],
+                options: [
+                    "Allows me to work independently most of the time",
+                    "Involves frequent collaboration with teams",
+                    "Balances independent work with team projects",
+                    "Requires constant interaction with many people"
+                ]
+            },
+            {
+                id: 38,
+                text: "When faced with a difficult decision, I typically:",
+                type: "multiple-choice",
+                dimension: ["problem-solving", "thinking style"],
+                options: [
+                    "Analyze all available data and options logically",
+                    "Consider how the decision will affect people involved",
+                    "Trust my intuition and gut feeling",
+                    "Follow established procedures or seek guidance from others"
+                ]
+            },
+            {
+                id: 39,
+                text: "In a conflict situation at work, I am most likely to:",
+                type: "multiple-choice",
+                dimension: ["conflict", "behavior"],
+                options: [
+                    "Address the issue directly and work toward a resolution",
+                    "Try to understand everyone's perspective and find common ground",
+                    "Avoid confrontation and hope it resolves itself",
+                    "Focus on the tasks at hand and minimize personal discussion"
+                ]
+            },
+            {
+                id: 40,
+                text: "Briefly describe your long-term career aspirations and what you hope to achieve professionally:",
+                type: "text",
+                dimension: ["goals", "aspirations"],
+                placeholder: "Share your thoughts on your ideal career path and professional goals..."
+            }
+        ];
+
+        // State management for the assessment
+        let state = {
+            currentQuestion: 0,
+            responses: {},
+            results: null
+        };
+
+        // DOM elements
+        const content = document.getElementById('content');
+        const progressBar = document.getElementById('progressBar');
+        const progressText = document.getElementById('progressText');
+
+        // Initialize the app when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            init();
+        });
+
+        // Initialize the assessment
+        function init() {
+            showQuestion(state.currentQuestion);
+            updateProgress();
+        }
+
+        // Display a specific question
+        function showQuestion(questionIndex) {
+            // Validate question index
+            if (questionIndex < 0 || questionIndex >= questions.length) {
+                console.error('Invalid question index:', questionIndex);
+                return;
+            }
+
+            const question = questions[questionIndex];
+            let questionHTML = `
+                <div class="question-container" id="question-container">
+                    <h2>${question.text}</h2>
+            `;
+
+            try {
+                // Generate options based on question type
+                if (question.type === "likert") {
+                    questionHTML += `
+                        <div class="likert-scale">
+                    `;
+                    question.options.forEach((option, index) => {
+                        const value = index + 1;
+                        const selected = state.responses[question.id] === value ? "selected" : "";
+                        questionHTML += `
+                            <div class="likert-option ${selected}" data-value="${value}" onclick="selectLikertOption(${question.id}, ${value})">
+                                <div class="likert-label">${option}</div>
+                            </div>
+                        `;
+                    });
+                    questionHTML += `
+                        </div>
+                    `;
+                } else if (question.type === "multiple-choice") {
+                    questionHTML += `
+                        <div class="options-container">
+                    `;
+                    question.options.forEach((option, index) => {
+                        const value = index + 1;
+                        const selected = state.responses[question.id] === value ? "selected" : "";
+                        questionHTML += `
+                            <div class="option ${selected}" onclick="selectOption(${question.id}, ${value})">
+                                <div class="option-check"></div>
+                                <span class="option-label">${option}</span>
+                            </div>
+                        `;
+                    });
+                    questionHTML += `
+                        </div>
+                    `;
+                } else if (question.type === "ranking") {
+                    questionHTML += `
+                        <p>Drag and drop to rank in order of importance:</p>
+                        <div class="ranking-container" id="ranking-container">
+                    `;
+                    const options = [...question.options];
+                    const currentResponses = state.responses[question.id] || [];
+                    
+                    // If we have existing responses, use that order, otherwise use default
+                    if (currentResponses.length > 0) {
+                        // Sort options based on current response ranking
+                        options.sort((a, b) => {
+                            const aRank = currentResponses[question.options.indexOf(a)] || 99;
+                            const bRank = currentResponses[question.options.indexOf(b)] || 99;
+                            return aRank - bRank;
+                        });
+                    }
+                    
+                    options.forEach((option, index) => {
+                        const originalIndex = question.options.indexOf(option);
+                        const currentRank = currentResponses[originalIndex] || 0;
+                        questionHTML += `
+                            <div class="ranking-item" draggable="true" data-index="${originalIndex}">
+                                <div class="ranking-handle">
+                                    <svg class="icon" viewBox="0 0 24 24"><path d="M10 18h4v-2h-4v2zM10 6h4V4h-4v2zm0 7h4v-2h-4v2z"/></svg>
+                                </div>
+                                <div class="ranking-rank">${currentRank || '?'}</div>
+                                ${option}
+                            </div>
+                        `;
+                    });
+                    questionHTML += `
+                        </div>
+                        <p><small>Note: Your ranking will be saved when you navigate to the next question</small></p>
+                    `;
+                } else if (question.type === "text") {
+                    const value = state.responses[question.id] || "";
+                    questionHTML += `
+                        <textarea class="text-input" placeholder="${question.placeholder || ''}" 
+                                  oninput="updateTextResponse(${question.id}, this.value)"
+                                  rows="4">${value}</textarea>
+                    `;
+                }
+
+                // Add navigation buttons
+                const isLastQuestion = questionIndex === questions.length - 1;
+                const isFirstQuestion = questionIndex === 0;
+                
+                questionHTML += `
+                    <div class="buttons">
+                        <button class="btn btn-prev" ${isFirstQuestion ? 'disabled' : ''} onclick="goToPreviousQuestion()">
+                            <svg class="icon" viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+                            Previous
+                        </button>
+                        <button class="btn ${isLastQuestion ? 'btn-submit' : 'btn-next'}" onclick="${isLastQuestion ? 'calculateResults()' : 'goToNextQuestion()'}">
+                            ${isLastQuestion ? 'Get Results' : 'Next'}
+                            <svg class="icon" viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>
+                        </button>
+                    </div>
+                </div>
+                `;
+
+                content.innerHTML = questionHTML;
+
+                // Trigger animation after a brief delay
+                setTimeout(() => {
+                    const container = document.getElementById('question-container');
+                    if (container) {
+                        container.style.opacity = 1;
+                        container.style.transform = 'translateY(0)';
+                        container.style.transition = 'opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1), transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)';
+                    }
+                }, 50);
+
+                // Add event listeners for drag and drop if it's a ranking question
+                if (question.type === "ranking") {
+                    setupRankingDragAndDrop();
+                }
+            } catch (error) {
+                console.error('Error generating question:', error);
+                content.innerHTML = `
+                    <div class="error">
+                        <h2>Oops! Something went wrong</h2>
+                        <p>We encountered an error loading this question. Please try again.</p>
+                        <button class="btn btn-next" onclick="restart()">Restart Assessment</button>
+                    </div>
+                `;
+            }
+        }
+
+        // Setup drag and drop for ranking questions
+        function setupRankingDragAndDrop() {
+            const rankingItems = document.querySelectorAll('.ranking-item');
+            let draggedItem = null;
+
+            rankingItems.forEach(item => {
+                item.addEventListener('dragstart', function(e) {
+                    draggedItem = this;
+                    this.classList.add('dragging');
+                    e.dataTransfer.effectAllowed = 'move';
+                });
+
+                item.addEventListener('dragend', function() {
+                    this.classList.remove('dragging');
+                    draggedItem = null;
+                    
+                    // Save the current ranking order
+                    updateRankingOrder();
+                });
+
+                item.addEventListener('dragover', function(e) {
+                    e.preventDefault();
+                    e.dataTransfer.dropEffect = 'move';
+                });
+
+                item.addEventListener('dragenter', function(e) {
+                    if (this !== draggedItem) {
+                        this.style.opacity = '0.5';
+                    }
+                });
+
+                item.addEventListener('dragleave', function() {
+                    this.style.opacity = '1';
+                });
+
+                item.addEventListener('drop', function(e) {
+                    e.preventDefault();
+                    this.style.opacity = '1';
+                    
+                    if (this !== draggedItem) {
+                        const parent = this.parentNode;
+                        const draggedIndex = Array.from(parent.children).indexOf(draggedItem);
+                        const targetIndex = Array.from(parent.children).indexOf(this);
+                        
+                        if (draggedIndex < targetIndex) {
+                            parent.insertBefore(draggedItem, this.nextSibling);
+                        } else {
+                            parent.insertBefore(draggedItem, this);
+                        }
+                        
+                        updateRankingOrder();
+                    }
+                });
+            });
+        }
+
+        // Update the ranking order in state
+        function updateRankingOrder() {
+            const rankingItems = document.querySelectorAll('#ranking-container .ranking-item');
+            const question = questions[state.currentQuestion];
+            const ranking = Array(question.options.length).fill(0);
+            
+            rankingItems.forEach((item, position) => {
+                const originalIndex = parseInt(item.getAttribute('data-index'));
+                ranking[originalIndex] = position + 1; // 1-indexed ranking
+            });
+            
+            state.responses[question.id] = ranking;
+            
+            // Update the rank numbers in the UI
+            rankingItems.forEach((item, position) => {
+                const rankElement = item.querySelector('.ranking-rank');
+                if (rankElement) {
+                    rankElement.textContent = position + 1;
+                }
+            });
+        }
+
+        // Select a likert scale option
+        function selectLikertOption(questionId, value) {
+            // Remove selected class from all options
+            document.querySelectorAll(`.likert-option`).forEach(el => {
+                el.classList.remove('selected');
+            });
+            
+            // Add selected class to clicked option
+            if (event && event.currentTarget) {
+                event.currentTarget.classList.add('selected');
+            }
+            
+            // Store response
+            state.responses[questionId] = value;
+        }
+
+        // Select a multiple choice option
+        function selectOption(questionId, value) {
+            // Remove selected class from all options
+            document.querySelectorAll('.option').forEach(el => {
+                el.classList.remove('selected');
+            });
+            
+            // Add selected class to clicked option
+            if (event && event.currentTarget) {
+                event.currentTarget.classList.add('selected');
+            }
+            
+            // Store response
+            state.responses[questionId] = value;
+        }
+
+        // Update text response
+        function updateTextResponse(questionId, value) {
+            state.responses[questionId] = value;
+        }
+
+        // Navigate to next question
+        function goToNextQuestion() {
+            // Validate response
+            const question = questions[state.currentQuestion];
+            if (!isResponseValid(question.id)) {
+                // Visual feedback for invalid response
+                const container = document.getElementById('question-container');
+                if (container) {
+                    container.style.animation = 'none';
+                    container.offsetHeight; // Trigger reflow
+                    container.style.animation = 'shake 0.5s ease-in-out';
+                    
+                    setTimeout(() => {
+                        if (container) {
+                            container.style.animation = '';
+                        }
+                        alert('Please provide a response to continue to the next question.');
+                    }, 500);
+                }
+                return;
+            }
+            
+            state.currentQuestion++;
+            if (state.currentQuestion < questions.length) {
+                showQuestion(state.currentQuestion);
+                updateProgress();
+            }
+        }
+
+        // Navigate to previous question
+        function goToPreviousQuestion() {
+            if (state.currentQuestion > 0) {
+                state.currentQuestion--;
+                showQuestion(state.currentQuestion);
+                updateProgress();
+            }
+        }
+
+        // Check if a response is valid
+        function isResponseValid(questionId) {
+            const question = questions.find(q => q.id === questionId);
+            if (!question) return false;
+            
+            const response = state.responses[questionId];
+            
+            if (question.type === 'text') {
+                return true; // Text fields are optional
+            } else {
+                return response !== undefined && response !== null && response !== '';
+            }
+        }
+
+        // Update progress bar and text
+        function updateProgress() {
+            const progress = ((state.currentQuestion) / questions.length) * 100;
+            progressBar.style.width = `${progress}%`;
+            progressText.textContent = `Question ${state.currentQuestion + 1} of ${questions.length}`;
+        }
+
+        // Calculate results using multi-dimensional profiling
+        function calculateResults() {
+            // Validate the last question
+            const lastQuestion = questions[questions.length - 1];
+            if (!isResponseValid(lastQuestion.id)) {
+                alert('Please complete the final question to receive your results.');
+                return;
+            }
+            
+            // Show loading state
+            content.innerHTML = `
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <h2>Analyzing your responses</h2>
+                    <p>We're calculating your career profile and finding the best matches...</p>
+                </div>
+            `;
+            
+            // Process responses with a slight delay to show loading state
+            setTimeout(() => {
+                try {
+                    // Calculate user profile across multiple dimensions
+                    const userProfile = calculateUserProfile();
+                    
+                    // Match against careers
+                    const matches = matchCareers(userProfile);
+                    
+                    // Display results
+                    displayResults(matches, userProfile);
+                } catch (error) {
+                    console.error("Error calculating results:", error);
+                    content.innerHTML = `
+                        <div class="results-container">
+                            <h2>Oops! Something went wrong</h2>
+                            <p>We encountered an error while calculating your results. Please try again.</p>
+                            <button class="restart-btn" onclick="restart()">
+                                <svg class="icon" viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
+                                Restart Assessment
+                            </button>
+                        </div>
+                    `;
+                }
+            }, 800);
+        }
+
+        // Calculate comprehensive user profile across multiple dimensions
+        function calculateUserProfile() {
+            const profile = {
+                riasec: { Realistic: 0, Investigative: 0, Artistic: 0, Social: 0, Enterprising: 0, Conventional: 0 },
+                bigFive: { openness: 0, conscientiousness: 0, extraversion: 0, agreeableness: 0, neuroticism: 0 },
+                workEnvironment: { structured: 0, dynamic: 0, solitary: 0, collaborative: 0, handsOn: 0, creative: 0 },
+                motivationalDrivers: { intrinsic: 0, extrinsic: 0, purpose: 0, achievement: 0, autonomy: 0 },
+                thinkingStyle: { analytical: 0, creative: 0, practical: 0, theoretical: 0 }
+            };
+            
+            let count = { riasec: 0, bigFive: 0, workEnvironment: 0, motivationalDrivers: 0, thinkingStyle: 0 };
+            
+            // Process each response
+            Object.keys(state.responses).forEach(responseIdStr => {
+                const responseId = parseInt(responseIdStr);
+                const question = questions.find(q => q.id === responseId);
+                const responseValue = state.responses[responseId];
+                
+                if (!question) return;
+                
+                // Skip text responses for quantitative analysis
+                if (question.type === 'text') return;
+                
+                // Normalize response value (1-5 for likert, 1-4 for multiple choice)
+                let normalizedValue = responseValue;
+                if (Array.isArray(responseValue)) {
+                    // For ranking questions, use the inverse of rank (1st place = highest value)
+                    normalizedValue = responseValue.map(rank => 6 - rank).reduce((a, b) => a + b, 0) / responseValue.length;
+                } else if (question.type === 'multiple-choice') {
+                    // For multiple choice, treat as 1-4 scale
+                    normalizedValue = responseValue;
+                } else {
+                    // For likert, already 1-5
+                    normalizedValue = responseValue;
+                }
+                
+                // Map dimensions and update profile
+                if (question.dimension) {
+                    question.dimension.forEach(dim => {
+                        // RIASEC dimensions
+                        if (['Realistic', 'Investigative', 'Artistic', 'Social', 'Enterprising', 'Conventional'].includes(dim)) {
+                            profile.riasec[dim] += normalizedValue;
+                            count.riasec++;
+                        }
+                        // Big Five personality traits
+                        else if (dim === 'openness') {
+                            profile.bigFive.openness += normalizedValue;
+                            count.bigFive++;
+                        }
+                        else if (dim === 'conscientiousness') {
+                            profile.bigFive.conscientiousness += normalizedValue;
+                            count.bigFive++;
+                        }
+                        else if (['extraversion', 'extroversion'].includes(dim)) {
+                            profile.bigFive.extraversion += normalizedValue;
+                            count.bigFive++;
+                        }
+                        else if (['agreeableness', 'empathy', 'helping'].includes(dim)) {
+                            profile.bigFive.agreeableness += normalizedValue;
+                            count.bigFive++;
+                        }
+                        else if (dim === 'neuroticism') {
+                            // Invert since lower neuroticism is better
+                            profile.bigFive.neuroticism += (6 - normalizedValue);
+                            count.bigFive++;
+                        }
+                        // Work environment
+                        else if (dim === 'structured') {
+                            profile.workEnvironment.structured += normalizedValue;
+                            profile.workEnvironment.dynamic += (6 - normalizedValue);
+                            count.workEnvironment += 2;
+                        }
+                        else if (dim === 'dynamic') {
+                            profile.workEnvironment.dynamic += normalizedValue;
+                            profile.workEnvironment.structured += (6 - normalizedValue);
+                            count.workEnvironment += 2;
+                        }
+                        else if (['independent', 'solitary'].includes(dim)) {
+                            profile.workEnvironment.solitary += normalizedValue;
+                            profile.workEnvironment.collaborative += (6 - normalizedValue);
+                            count.workEnvironment += 2;
+                        }
+                        else if (['collaborative', 'social'].includes(dim)) {
+                            profile.workEnvironment.collaborative += normalizedValue;
+                            profile.workEnvironment.solitary += (6 - normalizedValue);
+                            count.workEnvironment += 2;
+                        }
+                        else if (['hands-on', 'practical', 'Realistic'].includes(dim)) {
+                            profile.workEnvironment.handsOn += normalizedValue;
+                            count.workEnvironment++;
+                        }
+                        else if (dim === 'creative') {
+                            profile.workEnvironment.creative += normalizedValue;
+                            count.workEnvironment++;
+                        }
+                        // Motivational drivers
+                        else if (['intrinsic', 'learning', 'growth', 'mastery'].includes(dim)) {
+                            profile.motivationalDrivers.intrinsic += normalizedValue;
+                            count.motivationalDrivers++;
+                        }
+                        else if (['extrinsic', 'financial security', 'compensation'].includes(dim)) {
+                            profile.motivationalDrivers.extrinsic += normalizedValue;
+                            count.motivationalDrivers++;
+                        }
+                        else if (['social impact', 'purpose', 'helping others'].includes(dim)) {
+                            profile.motivationalDrivers.purpose += normalizedValue;
+                            count.motivationalDrivers++;
+                        }
+                        else if (['achievement', 'recognition', 'advancement'].includes(dim)) {
+                            profile.motivationalDrivers.achievement += normalizedValue;
+                            count.motivationalDrivers++;
+                        }
+                        else if (['autonomy', 'independence'].includes(dim)) {
+                            profile.motivationalDrivers.autonomy += normalizedValue;
+                            count.motivationalDrivers++;
+                        }
+                        // Thinking style
+                        else if (['analytical', 'logical', 'Investigative'].includes(dim)) {
+                            profile.thinkingStyle.analytical += normalizedValue;
+                            count.thinkingStyle++;
+                        }
+                        else if (['creative', 'Artistic', 'innovation'].includes(dim)) {
+                            profile.thinkingStyle.creative += normalizedValue;
+                            count.thinkingStyle++;
+                        }
+                        else if (['practical', 'hands-on', 'Realistic'].includes(dim)) {
+                            profile.thinkingStyle.practical += normalizedValue;
+                            count.thinkingStyle++;
+                        }
+                        else if (['theoretical', 'curiosity', 'Investigative'].includes(dim)) {
+                            profile.thinkingStyle.theoretical += normalizedValue;
+                            count.thinkingStyle++;
+                        }
+                    });
+                }
+            });
+            
+            // Normalize scores (convert sums to averages)
+            for (let category in profile) {
+                for (let dimension in profile[category]) {
+                    if (count[category] > 0) {
+                        if (category === 'riasec') {
+                            // For RIASEC, divide by number of RIASEC-related questions
+                            profile[category][dimension] = Math.round((profile[category][dimension] / (count.riasec / 6)) * 10) / 10;
+                        } else {
+                            // For other categories, divide by the count for that category
+                            profile[category][dimension] = Math.round((profile[category][dimension] / count[category]) * 10) / 10;
+                        }
+                    }
+                }
+            }
+            
+            // Calculate composite scores for easier comparison
+            profile.composite = {
+                peopleOrientation: Math.round((profile.bigFive.agreeableness + 
+                                            (profile.riasec.Social * 0.8) + 
+                                            (profile.motivationalDrivers.purpose * 0.7)) / 2.5 * 10) / 10,
+                analyticalAbility: Math.round((profile.riasec.Investigative + 
+                                             profile.thinkingStyle.analytical + 
+                                             profile.bigFive.conscientiousness) / 3 * 10) / 10,
+                creativity: Math.round((profile.riasec.Artistic + 
+                                      profile.thinkingStyle.creative + 
+                                      profile.bigFive.openness) / 3 * 10) / 10,
+                practicality: Math.round((profile.riasec.Realistic + 
+                                        profile.thinkingStyle.practical + 
+                                        profile.workEnvironment.handsOn) / 3 * 10) / 10,
+                leadership: Math.round((profile.riasec.Enterprising + 
+                                      profile.motivationalDrivers.achievement + 
+                                      profile.bigFive.extraversion * 0.8) / 2.8 * 10) / 10,
+                organization: Math.round((profile.riasec.Conventional + 
+                                         profile.workEnvironment.structured + 
+                                         profile.bigFive.conscientiousness * 0.8) / 2.8 * 10) / 10
+            };
+            
+            return profile;
+        }
+
+        // Calculate similarity between user profile and career profile using weighted fuzzy logic
+        function calculateSimilarity(userProfile, career) {
+            let totalSimilarity = 0;
+            let weightsTotal = 0;
+            
+            // RIASEC similarity (most important)
+            const riasecWeight = 3;
+            let riasecSimilarity = 0;
+            const maxRiasecDiff = 5; // Max possible difference per dimension
+            
+            for (let type in userProfile.riasec) {
+                // Normalize career RIASEC scores to 1-10 scale (they're already on 1-9)
+                const careerScore = career.riasec[type];
+                const userScore = userProfile.riasec[type];
+                
+                // Calculate difference (0-5, where 0 is identical)
+                const diff = Math.abs(careerScore - userScore);
+                
+                // Convert to similarity score (5 = perfect, 0 = completely different)
+                const similarity = 5 - diff;
+                riasecSimilarity += similarity;
+            }
+            
+            // Average RIASEC similarity and apply weight
+            riasecSimilarity = (riasecSimilarity / 6) / 5; // Normalize to 0-1
+            totalSimilarity += riasecSimilarity * riasecWeight;
+            weightsTotal += riasecWeight;
+            
+            // Work environment fit
+            const workEnvWeight = 2;
+            const userWorkEnv = userProfile.workEnvironment;
+            const careerWorkEnvType = career.workEnvironment;
+            let workEnvScore = 0;
+            
+            if (careerWorkEnvType === 'structured' && userWorkEnv.structured > userWorkEnv.dynamic) {
+                workEnvScore = Math.min(userWorkEnv.structured / 5, 1);
+            } else if (careerWorkEnvType === 'dynamic' && userWorkEnv.dynamic > userWorkEnv.structured) {
+                workEnvScore = Math.min(userWorkEnv.dynamic / 5, 1);
+            } else if (careerWorkEnvType === 'collaborative' && userWorkEnv.collaborative > userWorkEnv.solitary) {
+                workEnvScore = Math.min(userWorkEnv.collaborative / 5, 1);
+            } else if (careerWorkEnvType === 'creative' && userWorkEnv.creative > 3) {
+                workEnvScore = userWorkEnv.creative / 5;
+            } else if (careerWorkEnvType === 'hands-on' && userWorkEnv.handsOn > 3) {
+                workEnvScore = userWorkEnv.handsOn / 5;
+            } else if (careerWorkEnvType === 'fast-paced' && userWorkEnv.dynamic > 3) {
+                workEnvScore = userWorkEnv.dynamic / 5;
+            } else {
+                // Partial match or no strong preference
+                const envTypes = {
+                    'structured': userWorkEnv.structured,
+                    'dynamic': userWorkEnv.dynamic,
+                    'collaborative': userWorkEnv.collaborative,
+                    'solitary': userWorkEnv.solitary,
+                    'hands-on': userWorkEnv.handsOn,
+                    'creative': userWorkEnv.creative
+                };
+                
+                // If user has a clear preference (difference of 2+ points), penalize mismatch
+                const envValues = Object.values(envTypes);
+                const maxEnv = Math.max(...envValues);
+                const minEnv = Math.min(...envValues);
+                
+                if (maxEnv - minEnv >= 2) {
+                    // User has clear preference, so partial match gets partial score
+                    workEnvScore = 0.5;
+                } else {
+                    // User has no strong preference, so neutral score
+                    workEnvScore = 0.7;
+                }
+            }
+            
+            totalSimilarity += workEnvScore * workEnvWeight;
+            weightsTotal += workEnvWeight;
+            
+            // Motivational drivers
+            const motivWeight = 2;
+            let motivSimilarity = 0;
+            const userMotiv = userProfile.motivationalDrivers;
+            
+            // Check which motivational drivers are strong for this career
+            const careerMotivs = career.motivationalDrivers || [];
+            let matchedDrivers = 0;
+            let totalDrivers = 0;
+            
+            if (careerMotivs.includes('achievement') && userMotiv.achievement > 3) matchedDrivers++;
+            if (careerMotivs.includes('autonomy') && userMotiv.autonomy > 3) matchedDrivers++;
+            if (careerMotivs.includes('social impact') && userMotiv.purpose > 3) matchedDrivers++;
+            if (careerMotivs.includes('helping others') && userMotiv.purpose > 3) matchedDrivers++;
+            if (careerMotivs.includes('creativity') && userProfile.composite.creativity > 3) matchedDrivers++;
+            if (careerMotivs.includes('problem-solving') && userProfile.composite.analyticalAbility > 3) matchedDrivers++;
+            
+            totalDrivers = careerMotivs.length || 1; // Avoid division by zero
+            motivSimilarity = matchedDrivers / totalDrivers;
+            
+            totalSimilarity += motivSimilarity * motivWeight;
+            weightsTotal += motivWeight;
+            
+            // Big Five personality fit
+            const bigFiveWeight = 1.5;
+            let bigFiveSimilarity = 0;
+            const userBigFive = userProfile.bigFive;
+            
+            // Use career's implicit Big Five from RIASEC and other factors
+            const impliedBigFive = {
+                openness: (career.riasec.Artistic + career.riasec.Investigative) / 2,
+                conscientiousness: (career.riasec.Conventional + career.riasec.Realistic) / 2,
+                extraversion: (career.riasec.Social + career.riasec.Enterprising) / 2,
+                agreeableness: career.riasec.Social,
+                neuroticism: 5 - (career.riasec.Conventional / 2 + career.riasec.Realistic / 2) // Lower neuroticism preferred for stable careers
+            };
+            
+            // Normalize implied Big Five to 1-5 scale (they're on 1-9)
+            for (let trait in impliedBigFive) {
+                impliedBigFive[trait] = Math.min(impliedBigFive[trait] / 1.8, 5);
+            }
+            
+            // Calculate similarity across traits
+            let traitMatches = 0;
+            let traitCount = 0;
+            
+            for (let trait in userBigFive) {
+                // Only consider traits where career has clear requirements
+                const careerTraitLevel = impliedBigFive[trait];
+                if (careerTraitLevel > 2.5 || careerTraitLevel < 2.5) {
+                    traitCount++;
+                    // Check if user score is in the same relative range
+                    if ((userBigFive[trait] >= 3 && careerTraitLevel >= 3) || 
+                        (userBigFive[trait] < 3 && careerTraitLevel < 3)) {
+                        traitMatches++;
+                    }
+                }
+            }
+            
+            if (traitCount > 0) {
+                bigFiveSimilarity = traitMatches / traitCount;
+            } else {
+                bigFiveSimilarity = 0.7; // Neutral if no strong requirements
+            }
+            
+            totalSimilarity += bigFiveSimilarity * bigFiveWeight;
+            weightsTotal += bigFiveWeight;
+            
+            // Composite factor matches
+            const compositeWeight = 1.5;
+            let compositeMatches = 0;
+            let compositeCount = 0;
+            
+            // Check analytical match
+            compositeCount++;
+            if (userProfile.composite.analyticalAbility >= 3 && career.riasec.Investigative >= 5) {
+                compositeMatches++;
+            } else if (userProfile.composite.analyticalAbility >= 4) {
+                compositeMatches += 0.7;
+            } else if (userProfile.composite.analyticalAbility >= 3) {
+                compositeMatches += 0.4;
+            }
+            
+            // Check creativity match
+            compositeCount++;
+            if (userProfile.composite.creativity >= 3 && career.riasec.Artistic >= 5) {
+                compositeMatches++;
+            } else if (userProfile.composite.creativity >= 4) {
+                compositeMatches += 0.7;
+            } else if (userProfile.composite.creativity >= 3) {
+                compositeMatches += 0.4;
+            }
+            
+            // Check practicality match
+            compositeCount++;
+            if (userProfile.composite.practicality >= 3 && career.riasec.Realistic >= 5) {
+                compositeMatches++;
+            } else if (userProfile.composite.practicality >= 4) {
+                compositeMatches += 0.7;
+            } else if (userProfile.composite.practicality >= 3) {
+                compositeMatches += 0.4;
+            }
+            
+            // Check people orientation match
+            compositeCount++;
+            if (userProfile.composite.peopleOrientation >= 3 && career.riasec.Social >= 5) {
+                compositeMatches++;
+            } else if (userProfile.composite.peopleOrientation >= 4) {
+                compositeMatches += 0.7;
+            } else if (userProfile.composite.peopleOrientation >= 3) {
+                compositeMatches += 0.4;
+            }
+            
+            // Check leadership match
+            compositeCount++;
+            if (userProfile.composite.leadership >= 3 && career.riasec.Enterprising >= 5) {
+                compositeMatches++;
+            } else if (userProfile.composite.leadership >= 4) {
+                compositeMatches += 0.7;
+            } else if (userProfile.composite.leadership >= 3) {
+                compositeMatches += 0.4;
+            }
+            
+            const compositeSimilarity = compositeCount > 0 ? compositeMatches / compositeCount : 0.7;
+            totalSimilarity += compositeSimilarity * compositeWeight;
+            weightsTotal += compositeWeight;
+            
+            // Calculate final weighted similarity (0-1 scale)
+            let finalSimilarity = totalSimilarity / weightsTotal;
+            
+            // Convert to percentage (0-100)
+            let percentage = Math.round(finalSimilarity * 100);
+            
+            // Apply slight randomization for tie-breaking (1-3 points)
+            percentage = Math.min(percentage + Math.floor(Math.random() * 3), 98);
+            
+            return Math.round(percentage);
+        }
+
+        // Match careers based on user profile using fuzzy logic
+        function matchCareers(userProfile) {
+            // Calculate match scores for all careers
+            const careerMatches = careerDatabase.map(career => {
+                const score = calculateSimilarity(userProfile, career);
+                return { career, score };
+            });
+            
+            // Sort by score (highest first) and take top 5
+            return careerMatches
+                .sort((a, b) => b.score - a.score)
+                .slice(0, 5);
+        }
+
+        // Generate personalized reasons for career match
+        function generateMatchReasons(userProfile, career) {
+            const reasons = [];
+            const user = userProfile;
+            
+            // RIASEC-based reasons
+            const topRiasecUser = Object.entries(user.riasec)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 2)
+                .map(([type, score]) => ({ type, score }));
+                
+            const topRiasecCareer = Object.entries(career.riasec)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 2)
+                .map(([type, score]) => ({ type, score }));
+            
+            // Check for matching RIASEC types
+            topRiasecUser.forEach(userType => {
+                const careerMatch = topRiasecCareer.find(ct => ct.type === userType.type);
+                if (careerMatch && userType.score >= 4 && careerMatch.score >= 5) {
+                    switch(userType.type) {
+                        case 'Investigative':
+                            reasons.push("Your strong analytical and problem-solving skills align perfectly with the research and investigation required in this field");
+                            break;
+                        case 'Social':
+                            reasons.push("Your empathy and people skills make you well-suited for this people-oriented career");
+                            break;
+                        case 'Artistic':
+                            reasons.push("Your creative talents and original thinking would thrive in this artistic and expressive field");
+                            break;
+                        case 'Realistic':
+                            reasons.push("Your practical, hands-on approach matches well with the technical and physical aspects of this career");
+                            break;
+                        case 'Enterprising':
+                            reasons.push("Your leadership abilities and comfort with influence align with the entrepreneurial aspects of this role");
+                            break;
+                        case 'Conventional':
+                            reasons.push("Your organizational skills and attention to detail are ideal for the structured nature of this work");
+                            break;
+                    }
+                }
+            });
+            
+                        // Work environment fit
+            if (career.workEnvironment === 'structured' && user.workEnvironment.structured > 3) {
+                reasons.push("You prefer organized, predictable work environments which matches the structured nature of this career");
+            } else if (career.workEnvironment === 'dynamic' && user.workEnvironment.dynamic > 3) {
+                reasons.push("Your adaptability and comfort with change suit the fast-paced, evolving nature of this field");
+            } else if (career.workEnvironment === 'collaborative' && user.workEnvironment.collaborative > 3) {
+                reasons.push("Your social nature and teamwork preferences align well with the collaborative aspects of this career");
+            } else if (career.workEnvironment === 'creative' && user.composite.creativity > 3) {
+                reasons.push("Your creative thinking style would flourish in this innovative and expressive work environment");
+            } else if (career.workEnvironment === 'hands-on' && user.workEnvironment.handsOn > 3) {
+                reasons.push("Your preference for practical, physical work aligns well with the hands-on nature of this career");
+            }
+
+            // Motivational alignment
+            if (career.motivationalDrivers.includes('achievement') && user.motivationalDrivers.achievement > 3) {
+                reasons.push("Your drive for achievement and recognition matches the goal-oriented nature of this career");
+            }
+            
+            if (career.motivationalDrivers.includes('autonomy') && user.motivationalDrivers.autonomy > 3) {
+                reasons.push("Your desire for independence and self-direction aligns with the autonomous aspects of this role");
+            }
+            
+            if ((career.motivationalDrivers.includes('social impact') || career.motivationalDrivers.includes('helping others')) 
+                && user.motivationalDrivers.purpose > 3) {
+                reasons.push("Your motivation to make a positive difference in the world aligns with the social impact potential of this career");
+            }
+            
+            if (career.motivationalDrivers.includes('problem-solving') && user.composite.analyticalAbility > 3) {
+                reasons.push("Your analytical mindset and love for solving complex challenges match the problem-solving demands of this field");
+            }
+            
+            if (career.motivationalDrivers.includes('creativity') && user.composite.creativity > 3) {
+                reasons.push("Your creative talents and innovative thinking would be highly valued in this creative field");
+            }
+
+            // Default reasons if not enough specific matches
+            if (reasons.length === 0) {
+                reasons.push("Your overall profile shows strong alignment with the key requirements of this career");
+                reasons.push("Your skills and interests complement the typical responsibilities in this field");
+                reasons.push("This career offers opportunities that match your preferred work environment and values");
+            }
+
+            return reasons;
+        }
+
+        // Display results to the user
+        function displayResults(matches, userProfile) {
+            let resultsHTML = `
+                <div class="results-container">
+                    <h2>Your Career Matches</h2>
+                    <p>Based on your responses, we've identified the following careers that best align with your personality, interests, and work preferences.</p>
+            `;
+
+            // Top matches
+            matches.forEach((match, index) => {
+                const reasons = generateMatchReasons(userProfile, match.career);
+                
+                resultsHTML += `
+                    <div class="career-card">
+                        <div class="career-header">
+                            <h3 class="career-title">${match.career.title}</h3>
+                            <div class="alignment-score">${match.score}% Match</div>
+                        </div>
+                        
+                        <p class="career-description">${match.career.description}</p>
+                        
+                        <h4>Why This Career Fits You:</h4>
+                        <ul class="reasons-list">
+                `;
+                
+                reasons.slice(0, 3).forEach(reason => {
+                    resultsHTML += `<li>${reason}</li>`;
+                });
+                
+                resultsHTML += `
+                        </ul>
+                        
+                        <div class="details-grid">
+                            <div class="detail-item">
+                                <div class="detail-label">Work Environment</div>
+                                <div class="detail-value">${match.career.workEnvironmentDesc}</div>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <div class="detail-label">Education Required</div>
+                                <div class="detail-value">${match.career.education}</div>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <div class="detail-label">Key Skills</div>
+                                <div class="detail-value">${match.career.skills.join(', ')}</div>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <div class="detail-label">Growth Outlook</div>
+                                <div class="detail-value">${match.career.growthOutlook}</div>
+                            </div>
+                        </div>
+                        
+                        <div class="next-steps">
+                            <h4>Suggested Next Steps:</h4>
+                            <ul>
+                `;
+                
+                match.career.nextSteps.forEach(step => {
+                    resultsHTML += `<li>${step}</li>`;
+                });
+                
+                resultsHTML += `
+                            </ul>
+                        </div>
+                    </div>
+                `;
+            });
+
+            resultsHTML += `
+                    <button class="restart-btn" onclick="restart()">
+                        <svg viewBox="0 0 24 24" width="20" height="20"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
+                        Start Over
+                    </button>
+                </div>
+            `;
+
+            content.innerHTML = resultsHTML;
+        }
+
+        // Restart the assessment
+        function restart() {
+            state = {
+                currentQuestion: 0,
+                responses: {},
+                results: null
+            };
+            
+            showQuestion(state.currentQuestion);
+            updateProgress();
+        }
+
+        // Add keyboard navigation support
+        document.addEventListener('keydown', function(e) {
+            // Only process if we're on a question screen (not results)
+            if (!document.querySelector('.question-container')) return;
+            
+            switch(e.key) {
+                case 'ArrowLeft':
+                case 'ArrowUp':
+                    goToPreviousQuestion();
+                    break;
+                case 'ArrowRight':
+                case 'ArrowDown':
+                case 'Enter':
+                    // Only proceed if we're not on a text input
+                    if (!document.activeElement.classList.contains('text-input')) {
+                        goToNextQuestion();
+                    }
+                    break;
+            }
+        });
+
+        // Add accessibility features
+        function enhanceAccessibility() {
+            // Add ARIA labels to interactive elements
+            const buttons = document.querySelectorAll('.btn');
+            buttons.forEach(button => {
+                if (!button.getAttribute('aria-label')) {
+                    const text = button.textContent.trim();
+                    button.setAttribute('aria-label', text);
+                }
+            });
+            
+            // Ensure focus is managed properly
+            document.querySelectorAll('.option, .likert-option').forEach(el => {
+                el.setAttribute('tabindex', '0');
+                el.setAttribute('role', 'button');
+            });
+        }
+
+        // Initialize the application
+        function init() {
+            showQuestion(state.currentQuestion);
+            updateProgress();
+            
+            // Add a small delay to allow the animation to work
+            setTimeout(() => {
+                enhanceAccessibility();
+            }, 100);
+        }
+
+        // Make functions available globally
+        window.selectLikertOption = selectLikertOption;
+        window.selectOption = selectOption;
+        window.updateTextResponse = updateTextResponse;
+        window.goToNextQuestion = goToNextQuestion;
+        window.goToPreviousQuestion = goToPreviousQuestion;
+        window.calculateResults = calculateResults;
+        window.restart = restart;
+        window.setupRankingDragAndDrop = setupRankingDragAndDrop;
+        window.updateRankingOrder = updateRankingOrder;
+
+        // Start the application when the page loads
+        document.addEventListener('DOMContentLoaded', init);
+
+    </script>
+
+</body>
+</html>
